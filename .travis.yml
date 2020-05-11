@@ -1,0 +1,16 @@
+language: node_js
+
+jdk: openjdk8
+node_js:
+  - "12"
+
+cache:
+  directories:
+    - $HOME/.m2
+env:
+  - SCRIPT=travis-backend-run.sh
+  - SCRIPT=travis-backend-mvn-install.sh
+#  - SCRIPT=travis-frontend.sh
+
+script:
+  - ./.travis/$SCRIPT
