@@ -1,0 +1,7 @@
+{
+  "name": "wasty",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
