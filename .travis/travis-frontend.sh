@@ -2,4 +2,4 @@
 
 npm install npm@latest @ionic/cli
 
-cd src/wasteApp_client && npm install fund && ionic build
+cd src/wasteApp_client/wasteApp_mob_front && npm install fund && ionic build
