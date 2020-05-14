@@ -10,7 +10,8 @@ cache:
 env:
   - SCRIPT=travis-backend-run.sh
   - SCRIPT=travis-backend-mvn-install.sh
-  - SCRIPT=travis-frontend.sh
+  - SCRIPT=travis-frontend-npm-install.sh
+  - SCRIPT=travis-frontend-run.sh
 
 script:
   - ./.travis/$SCRIPT
