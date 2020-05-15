@@ -3,58 +3,53 @@
 .metadata
 .project
 Servers/
-skillful_network_server/.idea/
-skillful_network_server/.DS_Store
-skillful_network_server/target/
-skillful_network_server/.classpath
-skillful_network_server/.project
-skillful_network_server/.settings
-
-skillful_network_client/node_modules/
-skillful_network_client/.DS_Store
-skillful_network_client/.idea/
-skillful_network_client/dist/
+src/wasteApp_server/.idea/
+src/wasteApp_server/.DS_Store
+src/wasteApp_server/target/
+src/wasteApp_server/.classpath
+src/wasteApp_server/.project
+src/wasteApp_server/.settings
 
 */**/*.iml
 
 ### Eclipse ###
-skillful_network_server/.metadata
-skillful_network_server/bin/
-skillful_network_server/tmp/
-skillful_network_server/*.tmp
-skillful_network_server/*.bak
-skillful_network_server/*.swp
-skillful_network_server/*~.nib
-skillful_network_server/local.properties
-skillful_network_server/.settings/
-skillful_network_server/.loadpath
-skillful_network_server/.recommenders
+src/wasteApp_server/.metadata
+src/wasteApp_server/bin/
+src/wasteApp_server/tmp/
+src/wasteApp_server/*.tmp
+src/wasteApp_server/*.bak
+src/wasteApp_server/*.swp
+src/wasteApp_server/*~.nib
+src/wasteApp_server/local.properties
+src/wasteApp_server/.settings/
+src/wasteApp_server/.loadpath
+src/wasteApp_server/.recommenders
 
-skillful_network_server/.externalToolBuilders/
+src/wasteApp_server/.externalToolBuilders/
 
-skillful_network_server/*.launch
+src/wasteApp_server/*.launch
 
-skillful_network_server/*.pydevproject
+src/wasteApp_server/*.pydevproject
 
-skillful_network_server/.cproject
+src/wasteApp_server/.cproject
 
-skillful_network_server/.factorypath
+src/wasteApp_server/.factorypath
 
-skillful_network_server/.buildpath
+src/wasteApp_server/.buildpath
 
-skillful_network_server/.target
+src/wasteApp_server/.target
 
-skillful_network_server/.tern-project
+src/wasteApp_server/.tern-project
 
-skillful_network_server/.texlipse
+src/wasteApp_server/.texlipse
 
-skillful_network_server/.springBeans
+src/wasteApp_server/.springBeans
 
-skillful_network_server/.recommenders/
+src/wasteApp_server/.recommenders/
 
-skillful_network_server/.cache-main
-skillful_network_server/.scala_dependencies
-skillful_network_server/.worksheet
+src/wasteApp_server/.cache-main
+src/wasteApp_server/.scala_dependencies
+src/wasteApp_server/.worksheet
 
 # End of https://www.gitignore.io/api/eclipse
 
@@ -150,40 +145,7 @@ fabric.properties
 .idea/**/markdown-navigator.xml
 .idea/**/markdown-navigator/
 
-# End of https://www.gitignore.io/api/intellij
-
-
-# Created by https://www.gitignore.io/api/angular
-# Edit at https://www.gitignore.io/?templates=angular
-
-### Angular ###
-## Angular ##
-# compiled output
-skillful_network_client/dist/
-skillful_network_client/tmp/
-skillful_network_client/app/**/*.js
-skillful_network_client/app/**/*.js.map
-
-# dependencies
-skillful_network_client/node_modules/
-skillful_network_client/bower_components/
-
-# misc
-skillful_network_client/.sass-cache/
-skillful_network_client/connect.lock/
-skillful_network_client/coverage/
-skillful_network_client/libpeerconnection.log/
-skillful_network_client/npm-debug.log
-skillful_network_client/testem.log
-skillful_network_client/typings/
-
-# e2e
-skillful_network_client/e2e/*.js
-skillful_network_client/e2e/*.map
-
 #System Files
 .DS_Store/
-skillful_network_client/.DS_Store/
 
-# End of https://www.gitignore.io/api/angular
-skillful_network_server/.sts4-cache/classpath-data.json
+src/wasteApp_server/.sts4-cache/classpath-data.json
