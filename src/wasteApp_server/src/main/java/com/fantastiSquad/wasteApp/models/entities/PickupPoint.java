@@ -7,28 +7,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="pickup_point")
+@Table(name="pickup_points")
 public class PickupPoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToOne()
-//    private Location location;
+    @OneToOne(mappedBy = "pickupPoint", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"pickupPoint"})
+    private Location location;
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+//    @Column(name="packaging")
     @JsonIgnoreProperties({"pickupPointSet"})
     private Set<Packaging> packagingSet = new HashSet<Packaging>();
 
-    public PickupPoint(Long id, /*Location location, */Set<Packaging> packagingSet) {
+    public PickupPoint() {}
+
+    public PickupPoint(Long id, Location location, Set<Packaging> packagingSet) {
         this.id = id;
-//        this.location = location;
+        this.location = location;
         this.packagingSet = packagingSet;
     }
 
-    public PickupPoint(/*Location location, */Set<Packaging> packagingSet) {
-//        this.location = location;
+    public PickupPoint(Location location, Set<Packaging> packagingSet) {
+        this.location = location;
         this.packagingSet = packagingSet;
     }
 
@@ -40,13 +44,13 @@ public class PickupPoint {
         this.id = id;
     }
 
-//    public Location getLocation() {
-//        return this.location;
-//    }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     public Set<Packaging> getPackagingSet() {
         return this.packagingSet;
@@ -59,7 +63,7 @@ public class PickupPoint {
     @Override
     public String toString() {
         return "PickupPoint[id=" + this.id +
-//                ", location=" + this.location +
+                ", location=" + this.location +
                 ", packagingSet=" + this.packagingSet +
                 "]";
     }

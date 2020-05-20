@@ -15,7 +15,7 @@ public interface PickupPointService {
 
     Optional<PickupPoint> savePickupPointById(Long id);
 
-    void deletePickupPoint(Long id);
+    boolean deletePickupPoint(Long id);
 
 //    Optional<User> getUserById(Long id);
 //    Optional<JobOffer> getJobOfferById(Long id);

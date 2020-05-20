@@ -3,7 +3,7 @@ package com.fantastiSquad.wasteApp.models.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name="City")
+@Table(name="Cities")
 public class City {
 
     @Id

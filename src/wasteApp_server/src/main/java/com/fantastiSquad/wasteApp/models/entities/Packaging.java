@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="packaging")
+@Table(name="packagings")
 public class Packaging {
 
     @Id
@@ -15,8 +15,11 @@ public class Packaging {
     private Long id;
 
     @ManyToMany(cascade = {CascadeType.ALL}, mappedBy = "packagingSet")
+//    @Column(name="pickup_point")
     @JsonIgnoreProperties({"packagingSet"})
     private Set<PickupPoint> pickupPointSet  = new HashSet<PickupPoint>();
+
+    public Packaging(){}
 
     public Packaging(Long id, Set<PickupPoint> pickupPointSet) {
         this.id = id;

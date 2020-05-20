@@ -3,7 +3,7 @@ package com.fantastiSquad.wasteApp.models.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name="location")
+@Table(name="locations")
 public class Location {
 
     @Id
@@ -14,27 +14,33 @@ public class Location {
     private String address01;
     private String address02;
     private String postalCode;
+    private String city;
 
-//    @OneToOne()
-//    private City city;
+    @OneToOne
+    @MapsId
+    private PickupPoint pickupPoint;
 
-    public Location(Long id, Long latitude, Long longitude, String address01, String address02, String postalCode, City city) {
+    public Location(){}
+
+    public Location(Long id, Long latitude, Long longitude, String address01, String address02, String postalCode, String city, PickupPoint pickupPoint) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address01 = address01;
         this.address02 = address02;
         this.postalCode = postalCode;
-//        this.city = city;
+        this.city = city;
+        this.pickupPoint = pickupPoint;
     }
 
-    public Location(Long latitude, Long longitude, String address01, String address02, String postalCode, City city) {
+    public Location(Long latitude, Long longitude, String address01, String address02, String postalCode, String city, PickupPoint pickupPoint) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address01 = address01;
         this.address02 = address02;
         this.postalCode = postalCode;
-//        this.city = city;
+        this.city = city;
+        this.pickupPoint = pickupPoint;
     }
 
     public Long getId() {
@@ -85,13 +91,22 @@ public class Location {
         this.postalCode = postalCode;
     }
 
-//    public City getCity() {
-//        return this.city;
-//    }
-//
-//    public void setCity(City city) {
-//        this.city = city;
-//    }
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+
+    public PickupPoint getPickupPoint() {
+        return pickupPoint;
+    }
+
+    public void setPickupPoint(PickupPoint pickupPoint) {
+        this.pickupPoint = pickupPoint;
+    }
 
     @Override
     public String toString() {
@@ -102,7 +117,7 @@ public class Location {
                 ", adress01='" + this.address01 + '\'' +
                 ", adress02='" + this.address02 + '\'' +
                 ", postalCode='" + this.postalCode + '\'' +
-//                ", city=" + this.city +
+                ", city=" + this.city +
                 ']';
     }
 }
