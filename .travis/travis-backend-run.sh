@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # To add later : -Dspring-boot.run.profiles=test
-mvn clean package spring-boot:run -DskipTests -f src/wasteApp_server/pom.xml &
+mvn clean package spring-boot:run -DskipTests -f src/wasteApp_server/pom.xml -Dspring-boot.run.profiles=test &
 pid_backend=$!
 
 sleep 30 &
