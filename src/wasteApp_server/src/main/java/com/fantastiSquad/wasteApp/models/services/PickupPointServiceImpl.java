@@ -1,13 +1,18 @@
 package com.fantastiSquad.wasteApp.models.services;
 
 import com.fantastiSquad.wasteApp.models.entities.PickupPoint;
+import com.fantastiSquad.wasteApp.models.repositories.PickupPointRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service(value = "PickPointServiceImpl")
-public class PickPointServiceImpl implements PickupPointService {
+@Service(value = "PickupPointServiceImpl")
+public class PickupPointServiceImpl implements PickupPointService {
+
+    @Autowired
+    private PickupPointRepository pickupPointRepository;
 
     @Override
     public Optional<List<PickupPoint>> getAllPickupPoints() {
