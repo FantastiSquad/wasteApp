@@ -12,6 +12,7 @@ env:
   - SCRIPT=travis-backend-mvn-install.sh
   - SCRIPT=travis-frontend-npm-install.sh
   - SCRIPT=travis-frontend-run.sh
+  - SCRIPT=mvn clean install -f src/wasteApp_server/pom.xml -Dspring-boot.run.profiles=test
 
 script:
   - ./.travis/$SCRIPT
