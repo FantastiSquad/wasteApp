@@ -19,6 +19,11 @@ public class CityServiceImpl implements CityService {
   }
 
   @Override
+  public Optional<List<City>> searchCityByName(String name) {
+    return cityRepository.findByName(name);
+  }
+
+  @Override
   public Optional<City> getCityById(Long id) {
     return cityRepository.findById(id);
   }

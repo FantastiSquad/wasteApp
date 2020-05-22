@@ -1,22 +1,24 @@
 package com.fantastiSquad.wasteApp.models.entities;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="binTarget")
+@Table(name="bintarget")
 public class BinTarget {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String category;
   private String material;
-  private Set<String> destination = new HashSet<String>();
+  //private List<String> destination = new ArrayList<String>();
   private String color;
 
   @ManyToOne(cascade = CascadeType.REFRESH)
@@ -24,20 +26,20 @@ public class BinTarget {
   private City city;
 
   public BinTarget(Long id, String category, String material,
-      Set<String> destination, String color, City city) {
+      String color, City city) {
     this.id = id;
     this.category = category;
     this.material = material;
-    this.destination = destination;
+    //this.destination = destination;
     this.color = color;
     this.city = city;
   }
 
-  public BinTarget(String category, String material, Set<String> destination, String color,
+  public BinTarget(String category, String material, String color,
       City city) {
     this.category = category;
     this.material = material;
-    this.destination = destination;
+    //this.destination = destination;
     this.color = color;
     this.city = city;
   }
@@ -69,13 +71,13 @@ public class BinTarget {
     this.material = material;
   }
 
-  public Set<String> getDestination() {
+  /*public List<String> getDestination() {
     return destination;
   }
 
-  public void setDestination(Set<String> destination) {
+  public void setDestination(List<String> destination) {
     this.destination = destination;
-  }
+  }*/
 
   public String getColor() {
     return color;
@@ -99,7 +101,7 @@ public class BinTarget {
         "id=" + id +
         ", category='" + category + '\'' +
         ", material='" + material + '\'' +
-        ", destination=" + destination +
+        ", destination=" +
         ", color='" + color + '\'' +
         ", city=" + city +
         '}';
