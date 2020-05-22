@@ -1,9 +1,13 @@
 package com.fantastiSquad.wasteApp.controllers;
 
 import com.fantastiSquad.wasteApp.models.entities.City;
+import com.fantastiSquad.wasteApp.models.forms.CreateCity;
 import com.fantastiSquad.wasteApp.models.services.CityService;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +15,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -50,6 +56,11 @@ public class CityController {
       } else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune ville trouvée avec ce nom");
       }
+  }
+  
+  @PostMapping(value="/create")
+  public City createCity(@Valid @RequestBody City createCity){
+	  return cityService.saveOrUpdateCity(createCity);
   }
 
 //  @PutMapping(value = "/update/{id}") Si ville à modifier , il faudra créer un formulaire
