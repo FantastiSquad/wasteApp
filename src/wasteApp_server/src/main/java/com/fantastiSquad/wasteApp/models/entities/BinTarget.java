@@ -2,6 +2,8 @@ package com.fantastiSquad.wasteApp.models.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,37 +20,29 @@ public class BinTarget {
 	private Long id;
 	private String category;
 	private String material;
+	
+	@Enumerated(EnumType.ORDINAL)
 	private Destination destination;
+	
 	private String color;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "city_id")
-	private City city;
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "city_id")
+//	private City city;
 
-	public BinTarget(Long id, String category, String material, Destination destination, String color, City city) {
-		super();
-		this.id = id;
-		this.category = category;
-		this.material = material;
-		this.destination = destination;
-		this.color = color;
-		this.city = city;
-	}
-	
-	
 
-	public BinTarget(String category, String material, Destination destination, String color, City city) {
-		super();
-		this.category = category;
-		this.material = material;
-		this.destination = destination;
-		this.color = color;
-		this.city = city;
-	}
 
 
 
 	public BinTarget() {
+	}
+
+	public BinTarget(String category, String material, Destination destination, String color) {
+		super();
+		this.category = category;
+		this.material = material;
+		this.destination = destination;
+		this.color = color;
 	}
 
 	public Long getId() {
@@ -91,17 +85,10 @@ public class BinTarget {
 		this.color = color;
 	}
 
-	public City getCity() {
-		return city;
-	}
-
-	public void setCity(City city) {
-		this.city = city;
-	}
 
 	@Override
 	public String toString() {
 		return "BinTarget{" + "id=" + id + ", category='" + category + '\'' + ", material='" + material + '\''
-				+ ", destination=" + ", color='" + color + '\'' + ", city=" + city + '}';
+				+ ", destination=" + ", color='" + color + '\'' + ", city="  ;
 	}
 }

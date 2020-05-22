@@ -4,13 +4,19 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name="city")
@@ -23,7 +29,8 @@ public class City {
   private String city_name;
   private String cityCode;
 
-  @OneToMany(mappedBy = "city", fetch = FetchType.EAGER)
+  @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+  @Fetch(FetchMode.SELECT)
   private Set<BinTarget> binTarget = new HashSet<>();
 
   public City(Long id, String city_name, String cityCode,
