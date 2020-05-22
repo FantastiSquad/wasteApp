@@ -1,7 +1,7 @@
 package com.fantastiSquad.wasteApp.controllers;
 
 import com.fantastiSquad.wasteApp.models.entities.City;
-import com.fantastiSquad.wasteApp.models.forms.CreateCity;
+
 import com.fantastiSquad.wasteApp.models.services.CityService;
 import java.util.List;
 import java.util.Optional;
