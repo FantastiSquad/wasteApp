@@ -26,24 +26,24 @@ public class City {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String city_name;
+  private String name;
   private String cityCode;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @Fetch(FetchMode.SELECT)
   private Set<BinTarget> binTarget = new HashSet<>();
 
-  public City(Long id, String city_name, String cityCode,
+  public City(Long id, String name, String cityCode,
       Set<BinTarget> binTarget) {
     this.id = id;
-    this.city_name = city_name;
+    this.name = name;
     this.cityCode = cityCode;
     this.binTarget = binTarget;
   }
 
-  public City(String city_name, String cityCode,
+  public City(String name, String cityCode,
       Set<BinTarget> binTarget) {
-    this.city_name = city_name;
+    this.name = name;
     this.cityCode = cityCode;
     this.binTarget = binTarget;
   }
@@ -59,12 +59,12 @@ public class City {
     this.id = id;
   }
 
-  public String getCity_name() {
-    return city_name;
+  public String getname() {
+    return name;
   }
 
-  public void setCity_name(String city_name) {
-    this.city_name = city_name;
+  public void setname(String name) {
+    this.name = name;
   }
 
   public String getCityCode() {
@@ -87,7 +87,7 @@ public class City {
   public String toString() {
     return "City{" +
         "id=" + id +
-        ", city_name='" + city_name + '\'' +
+        ", name='" + name + '\'' +
         ", cityCode='" + cityCode + '\'' +
         ", binTarget=" + binTarget +
         '}';

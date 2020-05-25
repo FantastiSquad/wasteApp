@@ -36,10 +36,10 @@ public class CityController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<City> getCityById(@PathVariable("id") Long id) {
+  public ResponseEntity<Optional<City>> getCityById(@PathVariable("id") Long id) {
     Optional<City> cityFromDb = cityService.getCityById(id);
     if (cityFromDb.isPresent()) {
-      return new ResponseEntity<City>(cityFromDb.get(), HttpStatus.OK);
+      return new ResponseEntity<Optional<City>>(cityFromDb, HttpStatus.OK);
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,
           "La ville avec l'id " + id + " n'a pas été trouvée!");
@@ -48,8 +48,8 @@ public class CityController {
 
   @GetMapping(value="/searchCity/{name}")
   public ResponseEntity<List<City>> getCityByName(@PathVariable("name") String name){
-      String nameToModify = name;
-      List<City> cityFromDb = cityService.searchCityByName(nameToModify.toLowerCase()).get();
+      
+      List<City> cityFromDb = cityService.searchCityByName(name).get();
 
       if(!cityFromDb.isEmpty()){
         return new ResponseEntity<List<City>>(cityFromDb, HttpStatus.OK);
@@ -58,7 +58,7 @@ public class CityController {
       }
   }
   
-  @PostMapping(value="/create")
+  @PostMapping(value="")
   public City createCity(@Valid @RequestBody City createCity){
 	  return cityService.saveOrUpdateCity(createCity);
   }
@@ -83,7 +83,7 @@ public class CityController {
 //    }
 //  }
 
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<String> deleteCity(@PathVariable("id") Long id){
       Optional<City> cityToDelete = cityService.getCityById(id);
 
