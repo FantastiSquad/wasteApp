@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface CityRepository extends JpaRepository<City,Long> {
 
   //Recherche d'une ville par son nom
-    @Query(value = "select * from city where city_name like %:name%", nativeQuery = true)
-    Optional<List<City>> findByName(String name);
+    @Query(value = "select * from city where name like %:name%", nativeQuery = true)
+    List<City> findByName(String name);
 }

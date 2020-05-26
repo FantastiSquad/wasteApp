@@ -5,7 +5,9 @@ import com.fantastiSquad.wasteApp.models.repositories.CityRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service(value="cityService")
 public class CityServiceImpl implements CityService {
@@ -14,12 +16,12 @@ public class CityServiceImpl implements CityService {
   private CityRepository cityRepository;
 
   @Override
-  public List<City> getAllCities() {
-    return cityRepository.findAll();
+  public Optional<List<City>> getAllCities() {
+    return Optional.of(cityRepository.findAll());
   }
 
   @Override
-  public Optional<List<City>> searchCityByName(String name) {
+  public List<City> searchCityByName(String name) {
     return cityRepository.findByName(name);
   }
 
@@ -29,12 +31,16 @@ public class CityServiceImpl implements CityService {
   }
 
   @Override
-  public City saveOrUpdateCity(City city) {
-    return cityRepository.save(city);
+  public Optional<City> saveOrUpdateCity(City city) {
+    return Optional.of(cityRepository.save(city));
   }
 
   @Override
-  public void deleteCity(Long id) {
-      cityRepository.deleteById(id);
+  public boolean deleteCity(Long id) {
+      cityRepository.findById(id).map(item -> {
+    	  cityRepository.deleteById(id);
+    	  return true;    
+      }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Aucune ville trouvée avec l'id: " + id));
+      	return false;
   }
 }

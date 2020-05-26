@@ -31,8 +31,10 @@ public class CityController {
   CityService cityService;
 
   @GetMapping(value = "")
-  public List<City> getAllCities() {
-    return cityService.getAllCities();
+  public ResponseEntity<List<City>> getAllCities() {
+    List<City> allCitiesFromDb =  cityService.getAllCities()
+    		.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune ville trouvée!"));
+    return new ResponseEntity<List<City>>(allCitiesFromDb, HttpStatus.OK);
   }
 
   @GetMapping(value = "/{id}")
@@ -49,7 +51,7 @@ public class CityController {
   @GetMapping(value="/searchCity/{name}")
   public ResponseEntity<List<City>> getCityByName(@PathVariable("name") String name){
       
-      List<City> cityFromDb = cityService.searchCityByName(name).get();
+      List<City> cityFromDb = cityService.searchCityByName(name);
 
       if(!cityFromDb.isEmpty()){
         return new ResponseEntity<List<City>>(cityFromDb, HttpStatus.OK);
@@ -59,8 +61,10 @@ public class CityController {
   }
   
   @PostMapping(value="")
-  public City createCity(@Valid @RequestBody City createCity){
-	  return cityService.saveOrUpdateCity(createCity);
+  public ResponseEntity<City> createCity(@Valid @RequestBody City createCity){
+	  City newCity = cityService.saveOrUpdateCity(createCity)
+			  .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Impossible d'enregister la ville dans la DB"));
+	  return new ResponseEntity<City>(newCity, HttpStatus.OK);
   }
 
 //  @PutMapping(value = "/update/{id}") Si ville à modifier , il faudra créer un formulaire
