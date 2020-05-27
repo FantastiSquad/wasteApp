@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      GeoLocation
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Coordinates</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>Latitude: {{ latitude }}</ion-item>
+      <ion-item>Longitude: {{ longitude }}</ion-item>
+      <ion-item>Accuracy: {{ accuracy }}</ion-item>
+      <ion-item>Adresse: {{ address }}</ion-item>
+    </ion-card-content>
+    <ion-button (click)="getGeoLocation()" expand="block">
+      Get GPS Location
+    </ion-button>
+  </ion-card>
+  <div id="mapId" style="width: 100%; height: 50%"></div>
+</ion-content>
