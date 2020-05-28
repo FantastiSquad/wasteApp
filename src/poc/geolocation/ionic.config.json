@@ -1,0 +1,8 @@
+{
+  "name": "map_POC03",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

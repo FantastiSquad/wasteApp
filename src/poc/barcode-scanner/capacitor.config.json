@@ -1,0 +1,14 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "barcode-scanner",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+ // "linuxAndroidStudioPath": "/home/mash/Logiciels/android-studio_3.6.3/android-studio/bin/studio.sh"
+}
