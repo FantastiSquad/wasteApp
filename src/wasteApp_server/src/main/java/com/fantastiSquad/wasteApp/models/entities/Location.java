@@ -1,86 +1,61 @@
 package com.fantastiSquad.wasteApp.models.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name="locations")
+//@Entity
+//@Table(name="locations")
+@Embeddable
 public class Location {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long latitude;
-    private Long longitude;
-    private String address01;
-    private String address02;
-    private String postalCode;
-    private String city;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
-    @OneToOne
-    @MapsId
-    private PickupPoint pickupPoint;
+//    @OneToOne(mappedBy = "geolocation", cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties({"location"})
+    @NotNull(message = "GeoLocation cannot be null")
+    private GeoLocation geolocation;
+    private String subThoroughfare; // street number
+    @NotNull(message = "Street name cannot be null")
+    private String thoroughfare; // street name
+    @NotNull(message = "postal Code cannot be null")
+    private String postalCode;
+    @NotNull(message = "City/Localilty cannot be null")
+    private String locality; // City
+
+//    @OneToOne
+//    @MapsId
+//    private PickupPoint pickupPoint;
 
     public Location(){}
 
-    public Location(Long id, Long latitude, Long longitude, String address01, String address02, String postalCode, String city, PickupPoint pickupPoint) {
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address01 = address01;
-        this.address02 = address02;
+    public Location(String latitude, String longitude, String subThoroughfare, String thoroughfare, String postalCode, String locality) {
+        this.geolocation = new GeoLocation(latitude, longitude);
+        this.subThoroughfare = subThoroughfare;
+        this.thoroughfare = thoroughfare;
         this.postalCode = postalCode;
-        this.city = city;
-        this.pickupPoint = pickupPoint;
+        this.locality = locality;
     }
 
-    public Location(Long latitude, Long longitude, String address01, String address02, String postalCode, String city, PickupPoint pickupPoint) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address01 = address01;
-        this.address02 = address02;
-        this.postalCode = postalCode;
-        this.city = city;
-        this.pickupPoint = pickupPoint;
+    public GeoLocation getGeolocation() { return this.geolocation; }
+
+    public void setGeolocation(GeoLocation geolocation) { this.geolocation = geolocation; }
+
+    public String getSubThoroughfare() {
+        return this.subThoroughfare;
     }
 
-    public Long getId() {
-        return this.id;
+    public void setSubThoroughfare(String subThoroughfare) {
+        this.subThoroughfare = subThoroughfare;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getThoroughfare() {
+        return this.thoroughfare;
     }
 
-    public Long getLatitude() {
-        return this.latitude;
-    }
-
-    public void setLatitude(Long latitude) {
-        this.latitude = latitude;
-    }
-
-    public Long getLongitude() {
-        return this.longitude;
-    }
-
-    public void setLongitude(Long longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getAddress01() {
-        return this.address01;
-    }
-
-    public void setAddress01(String adress01) {
-        this.address01 = adress01;
-    }
-
-    public String getAddress02() {
-        return this.address02;
-    }
-
-    public void setAddress02(String adress02) {
-        this.address02 = adress02;
+    public void setThoroughfare(String thoroughfare) {
+        this.thoroughfare = thoroughfare;
     }
 
     public String getPostalCode() {
@@ -91,33 +66,23 @@ public class Location {
         this.postalCode = postalCode;
     }
 
-    public String getCity() {
-        return this.city;
+    public String getLocality() {
+        return this.locality;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-
-    public PickupPoint getPickupPoint() {
-        return pickupPoint;
-    }
-
-    public void setPickupPoint(PickupPoint pickupPoint) {
-        this.pickupPoint = pickupPoint;
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     @Override
     public String toString() {
         return "Location[" +
-                "id=" + this.id +
-                ", latitude=" + this.latitude +
-                ", longitude=" + this.longitude +
-                ", adress01='" + this.address01 + '\'' +
-                ", adress02='" + this.address02 + '\'' +
+//                "id=" + this.id +
+                ", geolocation=" + this.geolocation +
+                ", subThoroughfare='" + this.subThoroughfare + '\'' +
+                ", thoroughfare='" + this.thoroughfare + '\'' +
                 ", postalCode='" + this.postalCode + '\'' +
-                ", city=" + this.city +
+                ", locality=" + this.locality +
                 ']';
     }
 }

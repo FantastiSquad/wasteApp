@@ -1,5 +1,6 @@
 package com.fantastiSquad.wasteApp.models.services;
 
+import com.fantastiSquad.wasteApp.models.entities.GeoLocation;
 import com.fantastiSquad.wasteApp.models.entities.PickupPoint;
 
 import java.util.List;
@@ -11,9 +12,13 @@ public interface PickupPointService {
 
     Optional<PickupPoint> getPickupPointById(Long id);
 
+    Optional<List<PickupPoint>> getPickupPointByGeoLocation(GeoLocation gealocation);
+
+    Optional<List<PickupPoint>> getPickupPointByLocality(String locality);
+
     Optional<PickupPoint> saveOrUpdatePickupPoint(PickupPoint pickupPoint);
 
-    Optional<PickupPoint> savePickupPointById(Long id);
+//    Optional<PickupPoint> updatePickupPointById(Long id);
 
     boolean deletePickupPoint(Long id);
 

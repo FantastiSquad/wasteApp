@@ -3,6 +3,7 @@ package com.fantastiSquad.wasteApp.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,12 +15,12 @@ public class PickupPoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "pickupPoint", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"pickupPoint"})
+//    @OneToOne(mappedBy = "pickupPoint", cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties({"pickupPoint"})
+    @Valid
     private Location location;
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-//    @Column(name="packaging")
     @JsonIgnoreProperties({"pickupPointSet"})
     private Set<Packaging> packagingSet = new HashSet<Packaging>();
 
