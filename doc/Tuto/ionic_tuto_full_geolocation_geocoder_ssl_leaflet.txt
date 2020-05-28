@@ -1,0 +1,341 @@
+###############################################################################################
+#geolocator : 
+# https://capacitor.ionicframework.com/docs/apis/geolocation/
+# https://www.positronx.io/ionic-cordova-geolocation-and-geocoder-tutorial-with-examples/
+# https://www.freakyjolly.com/ionic-geolocation-and-geocoder-example/
+# https://edupala.com/how-to-add-leaflet-map-in-ionic/
+###############################################################################################
+
+sudo npm i -g cordova capacitor
+ionic start map_POC03 tabs --type=angular --capacitor
+cd map_POC03
+ionic build
+
+# install geolocation and geocoder cordova plugins with their associated ionic native module and 
+ionic cordova plugin add cordova-plugin-geolocation cordova-plugin-nativegeocoder
+npm install @ionic-native/geolocation @ionic-native/native-geocoder
+# install leaflet (leaflet-ant-path for drawing if required)
+npm install leaflet --save
+# npm install leaflet-ant-path --save
+
+# append in src/global.scss 
+/* Leaflet mappping anf marker */
+@import "~leaflet/dist/leaflet.css"
+
+# add in angular.json
+            "assets": [
+		(...)
+              {
+                "glob": "**/*",
+                "input": "./node_modules/leaflet/dist/images",
+                "output": "leaflet/"
+              }
+
+# add capacitor and cordova native platform (android here, ios for apple ??? must be tested for ios)
+# cordova required for Geocoder  !!
+ionic cordova platform add android  --> required for geocoder !!
+ionic capacitor add android
+
+###############################################################################################
+# add android studio cmd line, check android manifest for permission
+
+# configure "linuxAndroidStudioPath" in your capacitor.config.json to point to the location of studio.sh, using JavaScript-escaped paths:
+# $ which android-studio
+# /snap/bin/android-studio
+# {
+#   "linuxAndroidStudioPath": "/snap/bin/android-studio",
+# }
+
+# android/app/src/main/AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-feature android:name="android.hardware.location.gps" />
+
+###############################################################################################
+# SSL certificate generation if not already done
+
+$ cd <project_directory>
+$ ionic ssl generate --country-name=FR --state-or-province-name=06 --locality-name=Nice --organization-name=Ionic--common-name=localhost --bits=2048
+> openssl req -x509 -newkey rsa:2048 -nodes -subj /C=FR/ST=06/L=Nice/O=Ionic--common-name=localhost/CN=localhost -reqexts SAN -extensions SAN -config /tmp/ionic-ssl-47894b -days 365 -keyout /home/philou/Data/drive/Dev-Sandbox/Ionic/map_POC02/.ionic/ssl/key.pem -out /home/philou/Data/drive/Dev-Sandbox/Ionic/map_POC02/.ionic/ssl/cert.pem
+
+Generating a RSA private key
+..................+++++
+.......................................................................+++++
+writing new private key to '/home/philou/Data/drive/Dev-Sandbox/Ionic/map_POC02/.ionic/ssl/key.pem'
+-----
+
+Key:  ./.ionic/ssl/key.pem
+Cert: ./.ionic/ssl/cert.pem
+
+# copy both files in <ionic_project>/ssl directory
+
+# inject in angular.json :
+
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "app:build",
+            "ssl": true,
+            "sslCert": ".ssl/cert.pem ",
+            "sslKey": ".ssl/key.pem"
+          },
+
+# immport certificates in your system
+# windows : cert.mgr.msc 
+trusted root cerfication auth
+> certiffcate > import 
+
+# debian :
+$ sudo mkdir -p /usr/share/ca-certificates/ionic
+$ sudo cp ssl/cert.pem /usr/share/ca-certificates/ionic
+$ sudo echo "ionic/cert.pem" >> /etc/ca-certificates.conf
+$ sudo update-ca-certificates
+...
+Updating certificates in /etc/ssl/certs...
+1 added, 0 removed; done.
+
+# now use --ssl when running or building ionic, ie :
+$ ionic serve --ssl
+$ ionic cap run android -l --external --ssl
+
+# fix for ssl error in dev mode :
+# https://stackoverflow.com/questions/38863228/get-rid-of-ssl-verification-in-cordova-in-app-browser/57811110#57811110
+# add following code in node_modules/@capacitor/src/main/java/com/getcapacitor/BridgeWebViewClient.java :
+  // Add this override method
+  @Override
+  public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+    handler.proceed();
+    return;
+  }
+
+###############################################################################################
+# code usage
+
+# inject in app.module.ts :
+import { Geolocation } from '@capacitor/core';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+@NgModule({
+  providers: [
+    NativeGeocoder,
+
+
+# your component *.ts :
+import { Geolocation } from '@capacitor/core';
+import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderResult } from '@ionic-native/native-geocoder/ngx';
+import * as Leaflet from 'leaflet';
+
+export class YourPage implements OnInit, OnDestroy {
+
+    // Location coordinates : default : Nice / Colline du château / point de vue
+  //marker: any;
+  latitude: any ="43.695939";
+  longitude: any ="7.279748";
+  accuracy: number;
+  timestamp: any ="none";
+
+  // GoogleMap plugin
+  // map: any;
+
+  // Leaflet Map
+  map: Leaflet.Map;
+  zoom: number = 13;
+  marker: Leaflet.marker;
+  markerBase: Leaflet.icon;
+  markerYellow: Leaflet.icon;
+  markerGreen: Leaflet.icon;
+
+  //Geocoder configuration
+  geoencoderOptions: NativeGeocoderOptions = {
+    useLocale: true,
+    maxResults: 5
+  };
+  // Readable Address
+  address: string;
+
+  constructor(private nativeGeocoder: NativeGeocoder) {}
+
+  ngOnInit(): void {}
+  ionViewDidEnter() { this.leafletMap(); }
+
+  ngOnDestroy(): void {
+    // Remove map when we have multiple map object
+    this.map.remove();
+  }
+  
+  async getGeoLocation() {
+    Geolocation.getCurrentPosition()
+      .then((position) => {
+        // store geolocation
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.accuracy = position.coords.accuracy;
+        this.timestamp = (new Date(position.timestamp)).toString();
+        console.log("lat/lon/acc: " + this.latitude +" "+ this.longitude +" "+ this.accuracy);
+        console.log("time: " + this.timestamp);
+        
+        this.getGeoencoder(position.coords.latitude, position.coords.longitude);
+
+        //clean geolocation marker if any
+        if ( this.marker) {this.map.removeLayer(this.marker);}
+
+        // mark down geolocation 
+        // Leaflet.marker([this.latitude, this.longitude], {icon: this.markerIcon}).addTo(this.map).bindPopup('myLocation').openPopup();
+        this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerBase}).bindPopup('myLocation'),
+        this.map.addLayer(this.marker);
+        this.map.flyTo([this.latitude, this.longitude], this.zoom);
+        // this.map.flyToBounds([this.latitude, this.longitude]);
+      })
+      .catch((error) => {
+        console.log("Error getting location", error);
+      });
+  }
+
+  //geocoder method to fetch address from coordinates passed as arguments
+  getGeoencoder(latitude, longitude) {
+    this.nativeGeocoder.reverseGeocode(latitude, longitude, this.geoencoderOptions)
+      .then((result: NativeGeocoderResult[]) => {
+        this.address = this.generateAddress(result[0]);
+      })
+      .catch((error: any) => {
+        alert('Error getting location' + JSON.stringify(error));
+      });
+  }
+
+  //Return Comma saperated address
+  generateAddress(addressObj) {
+    let obj = [];
+    let address = "";
+    for (let key in addressObj) {
+      switch (key) {
+        case "areasOfInterest" :
+        case "latitude" :
+        case "longitude" :
+          { break;}
+        default:
+          { obj.push(addressObj[key]); break; }
+      }
+    }
+    obj.reverse();
+    for (let val in obj) {
+      if (obj[val].length)
+      // address += obj[val];
+        address = (address.length ? address + ', ' : '') + obj[val];
+    }
+    // return address.slice(0, -2);
+    return address;
+  }
+
+  leafletMap() {
+    // this.map = Leaflet.map('mapId').setView([this.latitude, this.longitude], this.zoom);
+    // Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'wasty©2020' }).addTo(this.map);
+    
+    var osm = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'wasty©2020' })
+    var cdn = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { attribution: 'wasty©2020' })
+    
+    this.map = Leaflet.map('mapId', {
+      center: [this.latitude, this.longitude], 
+      zoom: this.zoom, 
+      layers: [osm, cdn]
+    });
+
+    // base Maps
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "cartoCDN": cdn
+    };
+    // Leaflet.control.layers(baseMaps).addTo(this.map);
+    
+    // Marker iconing
+    this.markerBase = new Leaflet.icon({
+      iconUrl: 'assets/marker/marker-base-icon.png',
+      shadowUrl: 'assets/marker/marker-shadow.png',
+      iconSize: [ 25, 40 ],
+      iconAnchor: [ 13, 40 ],
+    });
+    this.markerYellow = new Leaflet.icon({
+      iconUrl: 'assets/marker/marker-yellow-icon.png',
+      shadowUrl: 'assets/marker/marker-shadow.png',
+      iconSize: [ 25, 40 ],
+      iconAnchor: [ 13, 40 ],
+    });
+    this.markerGreen = new Leaflet.icon({
+      iconUrl: 'assets/marker/marker-green-icon.png',
+      shadowUrl: 'assets/marker/marker-shadow.png',
+      iconSize: [ 25, 40 ],
+      iconAnchor: [ 13, 40 ],
+    });
+
+    //overlay Maps - mock locations
+    var pickup01 = Leaflet.marker([43.687414, 7.208046], {icon: this.markerGreen}).bindPopup('pickup01'),
+    pickup02    = Leaflet.marker([43.683629, 7.202659], {icon: this.markerGreen}).bindPopup('pickup02'),
+    recycler01    = Leaflet.marker([43.693798, 7.198906], {icon: this.markerYellow}).bindPopup('recycler01'),
+    recycler02    = Leaflet.marker([43.698536, 7.184249], {icon: this.markerYellow}).bindPopup('recycler02');
+
+    var pickups = Leaflet.layerGroup([pickup01, pickup02]),
+    recyclers = Leaflet.layerGroup([recycler01, recycler02]);
+
+    var overlayMaps = {
+        "Pickups": pickups,
+        "Recyclers": recyclers,
+    };
+
+    Leaflet.control.layers(baseMaps, overlayMaps).addTo(this.map);
+
+    // antPath([[28.644800, 77.216721], [34.1526, 77.5771]],
+    //   { color: '#FF0000', weight: 5, opacity: 0.6 })
+    //   .addTo(this.map);
+  }
+
+
+# your component *.html :
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      GeoLocation
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Coordinates</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>Latitude: {{ latitude }}</ion-item>
+      <ion-item>Longitude: {{ longitude }}</ion-item>
+      <ion-item>Accuracy: {{ accuracy }}</ion-item>
+      <ion-item>Adresse: {{ address }}</ion-item>
+    </ion-card-content>
+    <ion-button (click)="getGeoLocation()" expand="block">
+      Get GPS Location
+    </ion-button>
+  </ion-card>
+  <div id="mapId" style="width: 100%; height: 50%"></div>
+</ion-content>
+
+
+
+###############################################################################################
+# run and build
+
+# Check java version (cordova requires 1.8 maximum !! and cordova is required for geocoder for now)
+update-alternatives --config java  	--> java 1.8 !
+update-alternatives --config javac 	--> java 1.8 !
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+# dev testing with live reload : capacity won't run geocoder correctly because geocoder requires cordova !
+ionic cap run android -l --external --ssl --port=8200
+ionic cordova run android -l --external --ssl --port=8200
+
+# build and run package
+ionic cordova build android --prod --ssl
+adb devices
+adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk
+
+# build release -> need certification and signed apk thought
+$ ionic cordova build android --prod --release --ssl
+
+
+
+
