@@ -27,24 +27,24 @@ public class City {
   private Long id;
 
   private String name;
-  private String cityCode;
+  private String citycode;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @Fetch(FetchMode.SELECT)
   private Set<BinTarget> binTarget = new HashSet<>();
 
-  public City(Long id, String name, String cityCode,
+  public City(Long id, String name, String citycode,
       Set<BinTarget> binTarget) {
     this.id = id;
     this.name = name;
-    this.cityCode = cityCode;
+    this.citycode = citycode;
     this.binTarget = binTarget;
   }
 
-  public City(String name, String cityCode,
+  public City(String name, String citycode,
       Set<BinTarget> binTarget) {
     this.name = name;
-    this.cityCode = cityCode;
+    this.citycode = citycode;
     this.binTarget = binTarget;
   }
 
@@ -67,12 +67,12 @@ public class City {
     this.name = name;
   }
 
-  public String getCityCode() {
-    return cityCode;
+  public String getcitycode() {
+    return citycode;
   }
 
-  public void setCityCode(String cityCode) {
-    this.cityCode = cityCode;
+  public void setcitycode(String citycode) {
+    this.citycode = citycode;
   }
 
   public Set<BinTarget> getBinTarget() {
@@ -88,7 +88,7 @@ public class City {
     return "City{" +
         "id=" + id +
         ", name='" + name + '\'' +
-        ", cityCode='" + cityCode + '\'' +
+        ", citycode='" + citycode + '\'' +
         ", binTarget=" + binTarget +
         '}';
   }
