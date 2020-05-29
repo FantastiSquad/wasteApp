@@ -14,7 +14,7 @@ public class Packaging {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, mappedBy = "packagingSet")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "packagingSet")
 //    @Column(name="pickup_point")
     @JsonIgnoreProperties({"packagingSet"})
     private Set<PickupPoint> pickupPointSet  = new HashSet<PickupPoint>();

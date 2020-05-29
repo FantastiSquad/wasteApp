@@ -16,9 +16,9 @@ public class Location {
 //    @JsonIgnoreProperties({"location"})
     @NotNull(message = "GeoLocation cannot be null")
     private GeoLocation geolocation;
-    private String subThoroughfare; // street number
+    private String streetNumber; //  subThoroughfare
     @NotNull(message = "Street name cannot be null")
-    private String thoroughfare; // street name
+    private String streetName; // thoroughfare
     @NotNull(message = "postal Code cannot be null")
     private String postalCode;
     @NotNull(message = "City/Localilty cannot be null")
@@ -30,10 +30,10 @@ public class Location {
 
     public Location(){}
 
-    public Location(String latitude, String longitude, String subThoroughfare, String thoroughfare, String postalCode, String locality) {
+    public Location(String latitude, String longitude, String streetNumber, String streetName, String postalCode, String locality) {
         this.geolocation = new GeoLocation(latitude, longitude);
-        this.subThoroughfare = subThoroughfare;
-        this.thoroughfare = thoroughfare;
+        this.streetNumber = streetNumber;
+        this.streetName = streetName;
         this.postalCode = postalCode;
         this.locality = locality;
     }
@@ -42,20 +42,20 @@ public class Location {
 
     public void setGeolocation(GeoLocation geolocation) { this.geolocation = geolocation; }
 
-    public String getSubThoroughfare() {
-        return this.subThoroughfare;
+    public String getStreetNumber() {
+        return this.streetNumber;
     }
 
-    public void setSubThoroughfare(String subThoroughfare) {
-        this.subThoroughfare = subThoroughfare;
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
     }
 
-    public String getThoroughfare() {
-        return this.thoroughfare;
+    public String getStreetName() {
+        return this.streetName;
     }
 
-    public void setThoroughfare(String thoroughfare) {
-        this.thoroughfare = thoroughfare;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 
     public String getPostalCode() {
@@ -79,8 +79,8 @@ public class Location {
         return "Location[" +
 //                "id=" + this.id +
                 ", geolocation=" + this.geolocation +
-                ", subThoroughfare='" + this.subThoroughfare + '\'' +
-                ", thoroughfare='" + this.thoroughfare + '\'' +
+                ", streetNumber='" + this.streetNumber + '\'' +
+                ", streetName='" + this.streetName + '\'' +
                 ", postalCode='" + this.postalCode + '\'' +
                 ", locality=" + this.locality +
                 ']';
