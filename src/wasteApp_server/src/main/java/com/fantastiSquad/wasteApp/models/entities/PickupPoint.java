@@ -20,6 +20,9 @@ public class PickupPoint {
     @Valid
     private Location location;
 
+//    @Enumerated(EnumType.ORDINAL)
+//    private Destination destination;
+
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"pickupPointSet"})
     private Set<Packaging> packagingSet = new HashSet<Packaging>();

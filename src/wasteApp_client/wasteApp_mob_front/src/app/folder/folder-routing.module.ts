@@ -10,8 +10,11 @@ const routes: Routes = [
   },{
     path: 'tabcity',
     loadChildren: () => import('./tabcity/tabcity.module').then( m => m.TabcityPageModule)
+  },
+  {
+    path: 'tab-pickup-points',
+    loadChildren: () => import('./tab-pickup-points/tab-pickup-points.module').then( m => m.TabPickupPointsPageModule)
   }
-
 ];
 
 @NgModule({
