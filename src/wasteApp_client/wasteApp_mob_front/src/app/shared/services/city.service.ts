@@ -7,7 +7,7 @@ import { ApiHelperService } from './api-helper.service';
   providedIn: 'root'
 })
 export class CityService {
-  public cities: City[];
+  //public cities: City[];
 
   constructor(private api: ApiHelperService) {} 
 
@@ -86,7 +86,7 @@ export class CityService {
 
   public createCity(city: City): Promise<any>{
     let endpoint = `/city`;
-    console.log(`avant l'envoi: ${Object.values(city)}`);
+    //console.log(`avant l'envoi: ${Object.values(city)}`);
     let promise = new Promise((resolve, reject) => {
       this.api.post({ endpoint : endpoint, data : city})
           .then(

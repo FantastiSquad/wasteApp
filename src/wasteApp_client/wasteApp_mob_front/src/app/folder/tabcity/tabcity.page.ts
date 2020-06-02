@@ -15,9 +15,9 @@ export class TabcityPage implements OnInit {
 
   constructor(public cityService: CityService ) {
     this.cityList = [];  
-    this.binTarget.push(new BinTarget("category", "jaune", "MENAGER", "carton"));
+    this.binTarget.push(new BinTarget("category", "vert", "MENAGER", "verre"));
     this.binTarget.push(new BinTarget("category", "marron", "MENAGER", "ordinaire"));
-    this.cityToCreate = new City("Cagnes sur mer", "06480", this.binTarget);
+    this.cityToCreate = new City("Juan-les-pins", "06160", this.binTarget);
 
    }
 
