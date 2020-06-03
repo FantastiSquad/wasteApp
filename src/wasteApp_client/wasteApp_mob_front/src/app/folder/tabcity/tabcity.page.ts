@@ -23,7 +23,7 @@ export class TabcityPage implements OnInit {
 
   ngOnInit() {
     this.getAllCities();
-    this.createCity(this.cityToCreate);
+    //this.createCity(this.cityToCreate);
   }
   async getAllCities(){
     this.cityList = await this.cityService.getAllCities();
