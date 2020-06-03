@@ -7,15 +7,14 @@
 <ion-content>
   <ion-item>
     <ion-label color="secondary">Ville</ion-label>
-    <ion-label color="secondary">Code postal</ion-label>   
-         
+    <ion-label color="secondary">Code postal</ion-label>         
   </ion-item>
+
   <ion-list *ngFor="let item of cityList">
     <ion-item>
       <ion-label>{{item.id}}</ion-label>
       <ion-label>{{item.name}}</ion-label>
-      <ion-label>{{item.citycode}}</ion-label>
-           
+      <ion-label>{{item.citycode}}</ion-label>           
     </ion-item>
     <ion-list>
       <ion-label class="ion-padding-horizontal" color="secondary">Poubelle</ion-label>
@@ -29,6 +28,8 @@
     </ion-list>
     <br>
   </ion-list>
+
+  <br>
   
 </ion-content>
 
