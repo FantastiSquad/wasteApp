@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CityService } from '../../shared/services/city.service';
 import { City } from '../../shared/models/city';
 import { BinTarget } from '../../shared/models/bin-target';
+import { Groupment } from 'src/app/shared/models/groupment';
+import { GroupmentService } from 'src/app/shared/services/groupment.service';
 
 @Component({
   selector: 'app-tabcity',
@@ -10,10 +12,11 @@ import { BinTarget } from '../../shared/models/bin-target';
 })
 export class TabcityPage implements OnInit {
   public cityList : City[];
+  public groupmentList : Groupment[];
   public binTarget : BinTarget[] = new Array<BinTarget>();  
   public cityToCreate : City;
 
-  constructor(public cityService: CityService ) {
+  constructor(public cityService: CityService, public groupmentService: GroupmentService ) {
     this.cityList = [];  
     this.binTarget.push(new BinTarget("category", "vert", "MENAGER", "verre"));
     this.binTarget.push(new BinTarget("category", "marron", "MENAGER", "ordinaire"));
@@ -23,7 +26,9 @@ export class TabcityPage implements OnInit {
 
   ngOnInit() {
     this.getAllCities();
-    this.createCity(this.cityToCreate);
+    //this.createCity(this.cityToCreate);
+    // this.getAllGroupments();
+    // this.getGroupmentByName("nice");
   }
   async getAllCities(){
     this.cityList = await this.cityService.getAllCities();
@@ -50,5 +55,15 @@ export class TabcityPage implements OnInit {
     console.log("Avant l'appel au service" + Object.values(city));
     await this.cityService.createCity(city);
   
+  }
+
+  async getAllGroupments(){
+    this.groupmentList = await this.groupmentService.getAllGroupments();
+    console.log(this.groupmentList);
+  }
+
+  async getGroupmentByName(name : String){
+    this.groupmentList = await this.groupmentService.getGroupmentByName(name);
+    console.log(this.groupmentList);
   }
 }
