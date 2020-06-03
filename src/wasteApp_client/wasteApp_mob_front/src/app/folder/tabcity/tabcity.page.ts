@@ -26,7 +26,7 @@ export class TabcityPage implements OnInit {
 
   ngOnInit() {
     this.getAllCities();
-    this.createCity(this.cityToCreate);
+    //this.createCity(this.cityToCreate);
     // this.getAllGroupments();
     // this.getGroupmentByName("nice");
   }
