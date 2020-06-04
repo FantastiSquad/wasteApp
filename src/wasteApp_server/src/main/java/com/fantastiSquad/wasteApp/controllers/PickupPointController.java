@@ -62,7 +62,6 @@ public class PickupPointController {
 
     // #########################################################################
     // Post methods
-    // Optional<PickupPoint> saveOrUpdatePickupPoint(PickupPoint pickupPoint)
     // #########################################################################
 
     // Create a new pickup point
@@ -87,10 +86,9 @@ public class PickupPointController {
 
     // #########################################################################
     // Delete methods
-    // public boolean deletePickupPoint(Long id) {
     // #########################################################################
 
-    // Provide pickup point by its id
+    // Delete pickup point by its id
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deletePickupPoint(@PathVariable(value = "id") Long id) {
         if ( pickupPointService.deletePickupPoint(id) ) {
