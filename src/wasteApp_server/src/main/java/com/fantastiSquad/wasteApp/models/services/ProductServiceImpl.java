@@ -3,7 +3,9 @@ package com.fantastiSquad.wasteApp.models.services;
 import com.fantastiSquad.wasteApp.models.entities.Product;
 import com.fantastiSquad.wasteApp.models.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,9 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepository;
+    private static final String REQUEST_POST = "post";
+    private static final String REQUEST_PUT = "put";
+
     @Override
     public Optional<Product> findByName(String name) {
         return productRepository.findByName(name);
@@ -34,16 +39,14 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Optional<Product> saveOrUpdateProduct(Product product) {
-        return  Optional.of(productRepository.save(product));
-    }
+        return Optional.of(productRepository.save(product));
+        }
 
     @Override
     public boolean deleteProduct(Long id) {
-       if (productRepository.findById(id).isPresent()){
-           productRepository.deleteById(id);
-           return true;
-       }
-       return false;
+        productRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"id product not found " + id));
+        productRepository.deleteById(id);
+        return true;
     }
 
 }

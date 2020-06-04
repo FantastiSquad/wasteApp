@@ -43,28 +43,15 @@ public class ProductController {
     }
 
    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @PathVariable(value = "id") Long id, @RequestBody ProductForm product){
-    Product productToUpdate =  service.getProductById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id product not found " + id));
-    productToUpdate.setName(product.getName());
-    productToUpdate.setBarcode(product.getBarcode());
-    productToUpdate.setCategory(product.getCategory());
-    productToUpdate.setImageUrl(product.getImageUrl());
-    productToUpdate.setIndustry(product.getIndustry());
-    productToUpdate.setKeywords(product.getKeywords());
-    productToUpdate.setLanguage(product.getLanguage());
-    productToUpdate.setNewProduct(product.getNewProduct());
-    productToUpdate.setPackaging(product.getPackaging());
-    productToUpdate.setQuantity(product.getQuantity());
-    Product productUpdated = service.saveOrUpdateProduct(productToUpdate).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with update method, maybe take a look on your request "));
+    public ResponseEntity<Product> updateProduct(@Valid @PathVariable(value = "id") Long id, @RequestBody Product product){
+    Product productUpdated = service.saveOrUpdateProduct(product).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with update method, maybe take a look on your request "));
     return new ResponseEntity<>(productUpdated,HttpStatus.OK);
     }
 
     //Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteProduct(@PathVariable(value = "id") Long id){
-        Product product = service.getProductById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id product not found " + id));
-        Boolean productDeleted = service.deleteProduct(id);
-        return new ResponseEntity<>(productDeleted,HttpStatus.OK);
+        return new ResponseEntity<>(service.deleteProduct(id),HttpStatus.OK);
     }
     //name
     //barcode
