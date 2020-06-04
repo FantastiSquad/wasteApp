@@ -25,7 +25,7 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getProduct(){
+    public ResponseEntity<List<Product>> getProducts(){
        List<Product> products = service.getProducts().orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with findAll(getProducts) method, maybe take a look on your request"));
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -56,4 +56,3 @@ public class ProductController {
     //name
     //barcode
 }
-
