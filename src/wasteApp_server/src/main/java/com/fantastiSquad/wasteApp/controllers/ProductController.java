@@ -25,7 +25,7 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getProduct(){
+    public ResponseEntity<List<Product>> getProducts(){
        List<Product> products = service.getProducts().orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with findAll(getProducts) method, maybe take a look on your request"));
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -48,12 +48,21 @@ public class ProductController {
     return new ResponseEntity<>(productUpdated,HttpStatus.OK);
     }
 
-    //Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteProduct(@PathVariable(value = "id") Long id){
         return new ResponseEntity<>(service.deleteProduct(id),HttpStatus.OK);
     }
-    //name
+    //nameAndCodeBarre
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> getProductsByNameOrBarCode(@RequestParam("keyword") String keyword){
+        List<Product> products = service.getProductsByNameOrBarcode(keyword);
+        return new ResponseEntity<>(products,HttpStatus.OK);
+    }
     //barcode
+    @GetMapping("/barcode")
+    public ResponseEntity<List<Product>> getProductsByBarCode(@RequestParam("keyword") String keyword){
+        List<Product> products = service.getProductsByBarcode(keyword);
+        return new ResponseEntity<>(products,HttpStatus.OK);
+    }
 }
 

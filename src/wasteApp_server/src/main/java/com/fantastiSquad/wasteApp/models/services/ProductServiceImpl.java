@@ -14,18 +14,6 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepository;
-    private static final String REQUEST_POST = "post";
-    private static final String REQUEST_PUT = "put";
-
-    @Override
-    public Optional<Product> findByName(String name) {
-        return productRepository.findByName(name);
-    }
-
-    @Override
-    public Optional<Product> findByBarcode(String barCode) {
-        return productRepository.findByBarcode(barCode);
-    }
 
     @Override
     public Optional<Product> getProductById(Long id) {
@@ -48,5 +36,16 @@ public class ProductServiceImpl implements ProductService{
         productRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public List<Product> getProductsByNameOrBarcode(String keyword) {
+        return productRepository.findByNameContainsOrBarcodeContains(keyword, keyword);
+    }
+
+    @Override
+    public List<Product> getProductsByBarcode(String barCode) {
+        return productRepository.findByBarcodeContains(barCode);
+    }
+
 
 }
