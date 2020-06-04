@@ -325,10 +325,12 @@ update-alternatives --config javac 	--> java 1.8 !
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 # dev testing with live reload : capacity won't run geocoder correctly because geocoder requires cordova !
-ionic cap run android -l --external --ssl --port=8200
-ionic cordova run android -l --external --ssl --port=8200
+ionic cap run android -l --ssl --external [--port=8200]
+ionic cordova run android -l --ssl --external [--port=8200]
 
 # build and run package
+ionic cap build android --prod --ssl
+# or with cordova
 ionic cordova build android --prod --ssl
 adb devices
 adb install platforms/android/app/build/outputs/apk/debug/app-debug.apk

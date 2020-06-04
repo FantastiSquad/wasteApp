@@ -62,6 +62,7 @@ public class CityController {
   
   @PostMapping(value="")
   public ResponseEntity<City> createCity(@Valid @RequestBody City createCity){
+	  //System.out.println(createCity);
 	  City newCity = cityService.saveOrUpdateCity(createCity)
 			  .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Impossible d'enregister la ville dans la DB"));
 	  return new ResponseEntity<City>(newCity, HttpStatus.OK);
