@@ -42,8 +42,8 @@ public class ProductController {
         return new ResponseEntity<Product>(product, HttpStatus.OK);
     }
 
-   @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @PathVariable(value = "id") Long id, @RequestBody Product product){
+   @PutMapping("")
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product){
     Product productUpdated = service.saveOrUpdateProduct(product).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with update method, maybe take a look on your request "));
     return new ResponseEntity<>(productUpdated,HttpStatus.OK);
     }
