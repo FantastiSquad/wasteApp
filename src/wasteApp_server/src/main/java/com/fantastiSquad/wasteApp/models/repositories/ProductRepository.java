@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-   List<Product> findByNameContainsOrBarcodeContains(String name, String barcode);
+   Optional<List<Product>> findByNameContainsOrBarcodeContains(String name, String barcode);
 
-   List<Product> findByBarcodeContains(String barCode);
+   Optional<List<Product>>findByBarcodeContains(String barCode);
 }

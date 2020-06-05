@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    List<Product> getProductsByNameOrBarcode(String keyword);
+    Optional<List<Product>> getProductsByNameOrBarcode(String keyword);
 
-    List<Product> getProductsByBarcode(String barCode);
+    Optional<List<Product>> getProductsByBarcode(String barCode);
 
     Optional<Product> getProductById(Long id);
     Optional<List<Product>> getProducts();

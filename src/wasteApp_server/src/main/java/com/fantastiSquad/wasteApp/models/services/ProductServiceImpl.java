@@ -37,12 +37,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByNameOrBarcode(String keyword) {
+    public Optional<List<Product>> getProductsByNameOrBarcode(String keyword) {
         return productRepository.findByNameContainsOrBarcodeContains(keyword, keyword);
     }
 
     @Override
-    public List<Product> getProductsByBarcode(String barCode) {
+    public Optional<List<Product>> getProductsByBarcode(String barCode) {
         return productRepository.findByBarcodeContains(barCode);
     }
 

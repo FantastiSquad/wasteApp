@@ -54,14 +54,14 @@ public class ProductController {
     }
     //nameAndCodeBarre
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> getProductsByNameOrBarCode(@RequestParam("keyword") String keyword){
-        List<Product> products = service.getProductsByNameOrBarcode(keyword);
+    public ResponseEntity<List<Product>> getProductsByNameOrBarcode(@RequestParam("keyword") String keyword){
+        List<Product> products = service.getProductsByNameOrBarcode(keyword).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with getProductsByNameOrBarcode method, maybe take a look on your request "));
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
     //barcode
     @GetMapping("/barcode")
-    public ResponseEntity<List<Product>> getProductsByBarCode(@RequestParam("keyword") String keyword){
-        List<Product> products = service.getProductsByBarcode(keyword);
+    public ResponseEntity<List<Product>> getProductsByBarcode(@RequestParam("keyword") String keyword){
+        List<Product> products = service.getProductsByBarcode(keyword).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "something wrong with getProductsByBarcode method, maybe take a look on your request "));
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 }
