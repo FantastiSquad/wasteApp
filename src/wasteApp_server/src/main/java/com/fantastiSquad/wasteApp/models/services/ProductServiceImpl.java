@@ -1,5 +1,4 @@
 package com.fantastiSquad.wasteApp.models.services;
-
 import com.fantastiSquad.wasteApp.models.entities.Product;
 import com.fantastiSquad.wasteApp.models.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
