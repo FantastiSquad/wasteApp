@@ -72,6 +72,7 @@ export class TabPickupPointsPage implements OnInit {
 
   logForm() {
     console.log(this.locality);
-    this.findPickupPointByLocality(this.locality);
+    // this.findPickupPointByLocality(this.locality);
+    this.getPickupPointByLocality(this.locality);
   }
 }

@@ -36,6 +36,17 @@ public class PickupPointServiceImpl implements PickupPointService {
     }
 
     @Override
+    public Optional<List<PickupPoint>> findBySquaredGeolocation(String latitude, String longitude, String side) {
+        System.out.println("PickupPointServiceImpl.findPickupPointByLocality(latitude: "+latitude+", longitude: "+longitude+", side: "+side+")");
+        if (Double.valueOf(side) < 0) {
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "distance de recherche négative ! " + side);
+        }
+//        return Optional.of(pickupPointRepository.findBySquaredGeolocation(Double.toString(latitude), Double.toString(longitude), Double.toString(side)));
+//        return Optional.of(pickupPointRepository.findBySquaredGeolocation(latitude, longitude, side));
+        return Optional.of(pickupPointRepository.findBySquaredGeolocation(latitude, longitude, side));
+    }
+
+    @Override
     public Optional<List<PickupPoint>> getPickupPointByLocality(String locality) {
         return Optional.of(pickupPointRepository.getByLocality(locality));
     }
