@@ -15,6 +15,7 @@ public interface PickupPointService {
     Optional<List<PickupPoint>> getPickupPointByGeoLocation(GeoLocation gealocation);
 
     Optional<List<PickupPoint>> getPickupPointByLocality(String locality);
+    Optional<List<PickupPoint>> findPickupPointByLocality(String locality);
 
     Optional<PickupPoint> saveOrUpdatePickupPoint(PickupPoint pickupPoint);
 

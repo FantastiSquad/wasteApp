@@ -45,6 +45,15 @@ export class TabPickupPointsPage implements OnInit {
     console.log(this.pickupPoints);
   }
 
+  async findPickupPointByLocality(locality: string){
+    if (locality) {
+      this.pickupPoints = await this.pickupPointService.findPickupPointByLocality(locality);
+    } else {
+      this.getAllPickupPoints();
+    }
+    console.log(this.pickupPoints);
+  }
+
   async getPickupPointByGeoLocation(geolocation: GeoLocation){
     this.pickupPoints = await this.pickupPointService.getPickupPointByGeoLocation(geolocation);
     console.log(this.pickupPoints);
@@ -63,6 +72,6 @@ export class TabPickupPointsPage implements OnInit {
 
   logForm() {
     console.log(this.locality);
-    this.getPickupPointByLocality(this.locality);
+    this.findPickupPointByLocality(this.locality);
   }
 }

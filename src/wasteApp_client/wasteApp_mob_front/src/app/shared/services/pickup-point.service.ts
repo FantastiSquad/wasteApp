@@ -53,6 +53,19 @@ export class PickupPointService {
     return promise;
   }
 
+  public findPickupPointByLocality(keyword: string): Promise<any>{
+    let endpoint = this.endpoint + `/locality`;
+    let promise = new Promise((resolve, reject) => {
+      this.api.get({ endpoint: endpoint, queryParams: {keyword: keyword}})
+          .then(
+            res => { resolve(res); },
+            msg => {  reject(msg); }
+          ).catch((error) => { console.log("Aucun point de collecte disponible avec le parttern de localité: " + keyword); });
+
+    });
+    return promise;
+  }
+
   public getPickupPointByGeoLocation(geolocation: GeoLocation): Promise<any>{
     let endpoint = this.endpoint + `/geolocation`;
     let promise = new Promise((resolve, reject) => {

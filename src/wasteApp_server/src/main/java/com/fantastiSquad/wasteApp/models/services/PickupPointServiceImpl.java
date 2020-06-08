@@ -37,6 +37,11 @@ public class PickupPointServiceImpl implements PickupPointService {
 
     @Override
     public Optional<List<PickupPoint>> getPickupPointByLocality(String locality) {
+        return Optional.of(pickupPointRepository.getByLocality(locality));
+    }
+
+    @Override
+    public Optional<List<PickupPoint>> findPickupPointByLocality(String locality) {
         return Optional.of(pickupPointRepository.findByLocality(locality));
     }
 

@@ -40,7 +40,23 @@ public class PickupPointController {
         return new ResponseEntity<PickupPoint>(pickupPoint, HttpStatus.OK);
     }
 
-    // Provide list of pickup point by geoloation
+    // Provide list of pickup point by locality - exact match required
+    @GetMapping(value = "/locality/{locality}")
+    public ResponseEntity<List<PickupPoint>> getPickupPointByLocality(@PathVariable(value = "locality") String locality) {
+        List<PickupPoint> pickupPoints = pickupPointService.getPickupPointByLocality(locality)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun point de collecte trouvé avec le localité : " + locality));
+        return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
+    }
+
+    // Provide list of pickup point by locality pattern
+    @GetMapping(value = "/locality")
+    public ResponseEntity<List<PickupPoint>> findPickupPointByLocality(@RequestParam("keyword") String keyword) {
+        List<PickupPoint> pickupPoints = pickupPointService.findPickupPointByLocality(keyword)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun point de collecte trouvé avec le pattern de localité: " + keyword));
+        return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
+    }
+
+    // Provide list of pickup point by geolocation
     @GetMapping(value = "/geolocation")
     public ResponseEntity<List<PickupPoint>> getPickupPointByGeoLocation(
             @RequestParam(name = "lat", required = true) String latitude,
@@ -48,14 +64,6 @@ public class PickupPointController {
         GeoLocation geolocation = new GeoLocation(latitude, longitude);
         List<PickupPoint> pickupPoints = pickupPointService.getPickupPointByGeoLocation(geolocation)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "fonction non implémentée pour le moment - provided geolocation : " + geolocation));
-        return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
-    }
-
-    // Provide list of pickup point by geoloation
-    @GetMapping(value = "/locality/{locality}")
-    public ResponseEntity<List<PickupPoint>> getPickupPointByLocality(@PathVariable(value = "locality") String locality) {
-        List<PickupPoint> pickupPoints = pickupPointService.getPickupPointByLocality(locality)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun point de collecte trouvé avec la localité : " + locality));
         return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
     }
 
