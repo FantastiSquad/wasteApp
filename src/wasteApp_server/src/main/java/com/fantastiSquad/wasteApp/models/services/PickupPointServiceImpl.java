@@ -60,10 +60,13 @@ public class PickupPointServiceImpl implements PickupPointService {
             parametersMap.put("end", point.getLocation().getGeolocation().geoLocationToString());
             // Response response = given().log().all().params(parametersMap).when().get("v2/directions/driving-car").thenReturn();
             Response response = given().params(parametersMap).when().get("v2/directions/driving-car").thenReturn(); // System.out.println(response.getBody().asString());
-            JsonPath jsonPath = response.getBody().jsonPath();
-            point.getLocation().getGeolocation().setRoadDistance(jsonPath.getString("features[0].properties.summary.distance"));
-            point.getLocation().getGeolocation().setRoadDuration(jsonPath.getString("features[0].properties.summary.duration"));
-            System.out.println("openrouteservice.org -> road Vectors: "+point.getLocation().getGeolocation().estimatedRoadVectorToString());
+            System.out.println("openrouteservice.org -> http status code: "+ response.getStatusCode());
+            if (response.getStatusCode() == 200) {
+                JsonPath jsonPath = response.getBody().jsonPath();
+                point.getLocation().getGeolocation().setRoadDistance(jsonPath.getString("features[0].properties.summary.distance"));
+                point.getLocation().getGeolocation().setRoadDuration(jsonPath.getString("features[0].properties.summary.duration"));
+                System.out.println("openrouteservice.org -> road Vectors: "+point.getLocation().getGeolocation().estimatedRoadVectorToString());
+            } else { System.out.println("openrouteservice.org -> FAILED request !"); }
         });
         // A - check GET status before proceeding
 

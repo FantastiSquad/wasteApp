@@ -59,13 +59,19 @@ public class PickupPoint implements Comparable<Object>  {
         if (o.getClass().equals(PickupPoint.class)) {
 
             PickupPoint candidateItem = (PickupPoint) o;
+            int compareDistance = 0;
 
-            // natural order comparator flag for occurrence (Reversed would be with negative sign in front of compare calcul)
-            int compareDistance = this.getLocation().getGeolocation().getRoadDuration().compareTo(candidateItem.getLocation().getGeolocation().getRoadDuration());
+            if (this.getLocation().getGeolocation().getRoadDuration() != null) {
+                // natural order comparator flag for occurrence (Reversed would be with negative sign in front of compare calcul)
+                compareDistance = this.getLocation().getGeolocation().getRoadDuration().compareTo(candidateItem.getLocation().getGeolocation().getRoadDuration());
+            }
 
             // if both items have same occurrence value, we sort on item name
-            if (compareDistance == 0)
-                return this.getLocation().getGeolocation().getRoadDistance().compareTo(candidateItem.getLocation().getGeolocation().getRoadDistance());
+            if (compareDistance == 0) {
+                if (this.getLocation().getGeolocation().getRoadDistance() != null) {
+                    return this.getLocation().getGeolocation().getRoadDistance().compareTo(candidateItem.getLocation().getGeolocation().getRoadDistance());
+                }
+            }
 
             // else return initial compare value
             return compareDistance;
