@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -69,7 +66,11 @@ public class PickupPointServiceImpl implements PickupPointService {
             System.out.println("openrouteservice.org -> road Vectors: "+point.getLocation().getGeolocation().estimatedRoadVectorToString());
         });
         // A - check GET status before proceeding
-        // B - add sort 1/ duration 2/ distance
+
+        // Sorting candidate list
+        Collections.sort(pickupPoints);
+        System.out.println(">>>\tpickupPoints sorted list : " + pickupPoints);
+
         // C - check multi destination request (answer time gain)
         return Optional.of(pickupPoints);
     }
