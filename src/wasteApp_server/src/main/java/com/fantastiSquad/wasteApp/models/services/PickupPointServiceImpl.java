@@ -50,6 +50,7 @@ public class PickupPointServiceImpl implements PickupPointService {
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "distance de recherche négative ! " + side);
         }
         List<PickupPoint> pickupPoints = pickupPointRepository.findBySquaredGeolocation(latitude, longitude, side);
+
         // FYI : https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf624858a603515f754806bc51c989d6a2d330&start=7.2017595,43.70400028&end=7.208046,43.687414
         RestAssured.baseURI = "https://api.openrouteservice.org";
         Map<String, Object> parametersMap = new HashMap<>();

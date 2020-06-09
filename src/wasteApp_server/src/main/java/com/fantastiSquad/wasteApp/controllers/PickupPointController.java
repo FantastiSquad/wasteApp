@@ -69,7 +69,7 @@ public class PickupPointController {
         return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
     }
 
-    // Provide list of pickup point by Squared zone centered on geolocation (side unit is km, default is 10.0km)
+    // Provide list of pickup points by Squared zone centered on geolocation (side unit is km, default is 10.0km)
     @GetMapping(value = "/squared")
     public ResponseEntity<List<PickupPoint>> findBySquaredGeolocation(
             @RequestParam(name = "lat", required = true) String latitude,
