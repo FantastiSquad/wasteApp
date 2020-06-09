@@ -54,13 +54,13 @@ public class PickupPointServiceImpl implements PickupPointService {
         parametersMap.put("api_key", "5b3ce3597851110001cf624858a603515f754806bc51c989d6a2d330");
         parametersMap.put("start", longitude +","+ latitude );
 
+        System.out.println(">>>\tpickupPoints list : ");
         pickupPoints.forEach( point -> {
             System.out.println("id: "+point.getId()+", locality: "+point.getLocation().getLocality()+", type: "+point.getDestination()+", geolocation: "+point.getLocation().getGeolocation().geoLocationToString());
 
             parametersMap.put("end", point.getLocation().getGeolocation().geoLocationToString());
             // Response response = given().log().all().params(parametersMap).when().get("v2/directions/driving-car").thenReturn();
             Response response = given().params(parametersMap).when().get("v2/directions/driving-car").thenReturn(); // System.out.println(response.getBody().asString());
-            System.out.println("openrouteservice.org -> http status code: "+ response.getStatusCode());
             if (response.getStatusCode() == 200) {
                 JsonPath jsonPath = response.getBody().jsonPath();
                 point.getLocation().getGeolocation().setRoadDistance(jsonPath.getString("features[0].properties.summary.distance"));
@@ -71,7 +71,9 @@ public class PickupPointServiceImpl implements PickupPointService {
 
         // Sorting candidate list
         Collections.sort(pickupPoints);
-        System.out.println(">>>\tpickupPoints sorted list : " + pickupPoints);
+        System.out.println(">>>\tpickupPoints sorted list : ");
+        pickupPoints.stream().map(point -> point.getLocation().getGeolocation()).forEach(System.out::println);
+        // pickupPoints.stream().map(point -> point.getLocation().getGeolocation()).forEach(geo -> System.out.println("road Vectors: "+geo.estimatedRoadVectorToString()));
 
         // Check multi destination request (answer time gain) if possible
         return Optional.of(pickupPoints);

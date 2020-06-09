@@ -59,13 +59,12 @@ public class GeoLocation {
 
     @Override
     public String toString() {
-        return "[" + latitude
-                + ", " + longitude
-                + ", " + roadDistance
-                + ", " + roadDuration
+        return "["
+                + latitude + "," + longitude
+                + ", " + roadDistance + "m, " + roadDuration + "s, "
                 + "]";
     }
     public String geoLocationToString() { return longitude + "," + latitude; }
-    public String estimatedRoadVectorToString() { return roadDistance + "," + roadDuration; }
+    public String estimatedRoadVectorToString() { return roadDistance + "m," + roadDuration + "s"; }
 
 }
