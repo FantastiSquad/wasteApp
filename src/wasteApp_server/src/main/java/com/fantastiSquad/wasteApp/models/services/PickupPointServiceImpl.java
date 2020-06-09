@@ -53,7 +53,7 @@ public class PickupPointServiceImpl implements PickupPointService {
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("api_key", "5b3ce3597851110001cf624858a603515f754806bc51c989d6a2d330");
         parametersMap.put("start", longitude +","+ latitude );
-        // if (!pickupPoints.isEmpty()) {}
+
         pickupPoints.forEach( point -> {
             System.out.println("id: "+point.getId()+", locality: "+point.getLocation().getLocality()+", type: "+point.getDestination()+", geolocation: "+point.getLocation().getGeolocation().geoLocationToString());
 
@@ -68,13 +68,12 @@ public class PickupPointServiceImpl implements PickupPointService {
                 System.out.println("openrouteservice.org -> road Vectors: "+point.getLocation().getGeolocation().estimatedRoadVectorToString());
             } else { System.out.println("openrouteservice.org -> FAILED request !"); }
         });
-        // A - check GET status before proceeding
 
         // Sorting candidate list
         Collections.sort(pickupPoints);
         System.out.println(">>>\tpickupPoints sorted list : " + pickupPoints);
 
-        // C - check multi destination request (answer time gain)
+        // Check multi destination request (answer time gain) if possible
         return Optional.of(pickupPoints);
     }
 

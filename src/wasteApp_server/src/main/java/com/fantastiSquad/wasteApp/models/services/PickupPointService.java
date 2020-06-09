@@ -24,12 +24,4 @@ public interface PickupPointService {
 //    Optional<PickupPoint> updatePickupPointById(Long id);
 
     boolean deletePickupPoint(Long id);
-
-//    Optional<User> getUserById(Long id);
-//    Optional<JobOffer> getJobOfferById(Long id);
-//    Optional<List<PickupPoint>> getJobApplicationsByUserId(Long userId);
-//    Optional<List<PickupPoint>> getJobApplicationsByJobOfferId(Long jobOfferId);
-//    Optional<User> setUserById(Long id, Long userId);
-//    Optional<JobOffer> setJobOfferById(Long id, Long jobOfferId);
-
 }

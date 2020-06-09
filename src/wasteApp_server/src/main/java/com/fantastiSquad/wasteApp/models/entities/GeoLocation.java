@@ -19,7 +19,6 @@ public class GeoLocation {
 
     // to provide road distance and duration when Geolocalized
     @Transient
-//    @Column(name = "roadDistance", insertable = false, updatable = false)
     private String roadDistance;
     @Transient
     private String roadDuration;

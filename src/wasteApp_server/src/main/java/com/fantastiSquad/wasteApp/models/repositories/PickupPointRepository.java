@@ -19,21 +19,15 @@ public interface PickupPointRepository  extends JpaRepository<PickupPoint, Long>
     @Query(value = "select * from pickup_points where locality like %:locality%", nativeQuery = true)
     List<PickupPoint> findByLocality(String locality);
 
-    // Recherche dnas une zone carré autour d'une Géolocation
+    // Recherche dans une zone carré autour d'une position Géolocalisée (LATpt, LONGpt)
     // Latitude : 1°=+-111 km
     // Longitude, depends on latitude :
-    //    - nice 1°=+-82 km
+    //    - Nice 1°=+-82 km
     //    - Lille 1°=+-71 km
-    // Average Longititude for france : 76 km for simplicity research
+    // --> Average Longitude for france : 76 km to simplify process
     // Then a square of 2d side centered on a position :
-    //    LATpt - d/111 < LAT < LATpt + d/111   -> latitude min + 2xd/111
-    //    LONGpt - d/76 < LONG < LONGpt + d/76  -> longitude min + 2xd/76
-//    @Query(value = "select * from pickup_points where (cast(latitude as decimal(10,8)) between '10.2' and '53') and (cast(longitude as decimal(10,8)) between '10.2' and '53')", nativeQuery = true)
-//    @Query(value = "select * from pickup_points where cast(latitude as decimal(10,8)) between :lat-10 and :lat+10", nativeQuery = true)
-//    List<PickupPoint> findBySquaredGeolocation(String lat);
-//    @Query(value = "select * from pickup_points where cast(latitude as decimal(10,8)) between :lat-:side/111 and :lat+:side/111", nativeQuery = true)
-//    List<PickupPoint> findBySquaredGeolocation(String lat, String side);
-//    @Query(value = "select * from pickup_points where (cast(latitude as decimal(10,8)) between ?1-?3/111 and ?1+?3/111) and (cast(longitude as decimal(10,8)) between ?2-?3/76 and ?2+?3/76)", nativeQuery = true)
+    //    LATpt - d/111 < LAT < LATpt + d/111
+    //    LONGpt - d/76 < LONG < LONGpt + d/76
     @Query(value = "select * from pickup_points where (cast(latitude as decimal(10,8)) between :lat-:side/111 and :lat+:side/111) and (cast(longitude as decimal(10,8)) between :lon-:side/76 and :lon+:side/76)", nativeQuery = true)
     List<PickupPoint> findBySquaredGeolocation(String lat, String lon, String side);
 }
