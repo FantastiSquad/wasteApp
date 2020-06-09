@@ -77,7 +77,6 @@ public class PickupPointController {
             @RequestParam(name = "side", defaultValue = "10.0") String side
             ) {
         System.out.println("PickupPointController.findPickupPointByLocality(latitude: "+latitude+", longitude: "+longitude+", side: "+side+")");
-//        GeoLocation geolocation = new GeoLocation(latitude, longitude);
         List<PickupPoint> pickupPoints = pickupPointService.findBySquaredGeolocation(latitude,  longitude, side)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "fonction non implémentée pour le moment - provided geolocation : " + new GeoLocation(latitude, longitude)));
         return new ResponseEntity<List<PickupPoint>>(pickupPoints, HttpStatus.OK);
