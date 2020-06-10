@@ -1,5 +1,7 @@
 package com.fantastiSquad.wasteApp.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
@@ -12,20 +14,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
+ //   @Size(min = 2, max = 20, message = "username must be between 2 and 20 characters")
     private String username;
-    @Email(message = "email should be valid")
+ //   @Email(message = "email should be valid")
     private String email;
-    @Size(min = 8, message = "password must be at least 8 characters")
+ //   @Size(min = 8, message = "password must be at least 8 characters")
     private String password;
-    private ProductBin productBin;
-    private Basket basket;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private ProductBin productBin = new ProductBin(this);
+
+    @OneToOne (mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Basket basket = new Basket(this);
 
     //	------------------------------------------ Constructors ---------------------------------------------------------------------------
     public User() {
-        super();
-        this.productBin = new ProductBin(this.id);
-        this.basket = new Basket(this.id);
+
     }
 
     public User(@Size(min = 2, max = 20, message = "username must be between 2 and 20 characters") String username, @Email(message = "email should be valid") String email, @Size(min = 8, message = "password must be at least 8 characters") String password, ProductBin productBin, Basket basket) {
