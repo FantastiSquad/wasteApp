@@ -1,7 +1,6 @@
 package com.fantastiSquad.wasteApp.models.repositories;
 
 import com.fantastiSquad.wasteApp.models.entities.User;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
