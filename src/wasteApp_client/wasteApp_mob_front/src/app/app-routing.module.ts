@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path:'pickup',
     loadChildren: () => import('./folder/tab-pickup-points/tab-pickup-points.module').then( m => m.TabPickupPointsPageModule)
+  },
+  {
+    path: 'map',
+    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
   }
 ];
 
