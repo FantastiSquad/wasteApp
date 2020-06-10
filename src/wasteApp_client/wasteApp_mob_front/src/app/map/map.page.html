@@ -2,16 +2,38 @@
   <ion-toolbar color="success">
     <ion-title>
       Map
-      <form (ngSubmit)="localityConfirm()">
+      <!-- <form (ngSubmit)="localityConfirm()">
         <ion-item  color="success">
           <ion-label>Locality</ion-label>
           <ion-input type="search" [(ngModel)]="locality" name="locality" placeholder="Locality input" clearInput></ion-input>
         </ion-item>
-      </form>
+      </form> -->
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content [fullscreen]="true">
+<!-- <ion-content> -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Zone de recherche</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- <ion-item>Latitude: {{ latitude }}</ion-item>
+      <ion-item>Longitude: {{ longitude }}</ion-item>
+      <ion-item>Accuracy: {{ accuracy }}</ion-item>
+      <ion-item>Adresse: {{ address }}</ion-item> -->
+      <form (ngSubmit)="localityConfirm()">
+        <!-- <ion-item  color="success"> -->
+        <ion-item>
+          <ion-label>Locality</ion-label>
+          <ion-input type="search" [(ngModel)]="locality" name="locality" placeholder="Locality input" clearInput></ion-input>
+        </ion-item>
+      </form>
+    </ion-card-content>
+    <!-- <ion-button (click)="getGeoLocation()" expand="block">
+      Get GPS Location
+    </ion-button> -->
+  </ion-card>
+  <div id="mapId" style="width: 100%; height: 100%"></div>
 </ion-content>
