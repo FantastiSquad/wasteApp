@@ -1,5 +1,6 @@
 package com.fantastiSquad.wasteApp.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,12 @@ public class Product {
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JsonIgnoreProperties("products")
     Set<Packaging> packaging = new HashSet<Packaging>();
+    @ManyToMany(mappedBy = "productsBasket",cascade = {CascadeType.PERSIST},fetch = FetchType.EAGER)
+    @JsonIgnore
+    Set<Basket> baskets = new HashSet<Basket>();
+    @ManyToMany(mappedBy = "productsBin",cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JsonIgnore
+    Set<ProductBin> bins = new HashSet<ProductBin>();
 
     public Product(Long id, @NotNull String barcode, @NotNull String name, String imageUrl, Brand industry, String[] keywords, @Positive Integer quantity, @NotNull String language, @NotNull Boolean newProduct, String category, Set<Packaging> packaging) {
         this.id = id;
