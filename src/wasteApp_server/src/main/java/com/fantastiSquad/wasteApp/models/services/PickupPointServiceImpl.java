@@ -4,13 +4,18 @@ import com.fantastiSquad.wasteApp.models.entities.GeoLocation;
 import com.fantastiSquad.wasteApp.models.entities.PickupPoint;
 import com.fantastiSquad.wasteApp.models.repositories.PackagingRepository;
 import com.fantastiSquad.wasteApp.models.repositories.PickupPointRepository;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.http.ContentType.JSON;
 
 @Service(value = "PickupPointServiceImpl")
 public class PickupPointServiceImpl implements PickupPointService {
@@ -36,7 +41,51 @@ public class PickupPointServiceImpl implements PickupPointService {
     }
 
     @Override
+    public Optional<List<PickupPoint>> findBySquaredGeolocation(String latitude, String longitude, String side) {
+        System.out.println("PickupPointServiceImpl.findPickupPointByLocality(latitude: "+latitude+", longitude: "+longitude+", side: "+side+")");
+        if (Double.valueOf(side) < 0) {
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "distance de recherche négative ! " + side);
+        }
+        List<PickupPoint> pickupPoints = pickupPointRepository.findBySquaredGeolocation(latitude, longitude, side);
+
+        // FYI : https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf624858a603515f754806bc51c989d6a2d330&start=7.2017595,43.70400028&end=7.208046,43.687414
+        RestAssured.baseURI = "https://api.openrouteservice.org";
+        Map<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("api_key", "5b3ce3597851110001cf624858a603515f754806bc51c989d6a2d330");
+        parametersMap.put("start", longitude +","+ latitude );
+
+        System.out.println(">>>\tpickupPoints list : ");
+        pickupPoints.forEach( point -> {
+            System.out.println("id: "+point.getId()+", locality: "+point.getLocation().getLocality()+", type: "+point.getDestination()+", geolocation: "+point.getLocation().getGeolocation().geoLocationToString());
+
+            parametersMap.put("end", point.getLocation().getGeolocation().geoLocationToString());
+            // Response response = given().log().all().params(parametersMap).when().get("v2/directions/driving-car").thenReturn();
+            Response response = given().params(parametersMap).when().get("v2/directions/driving-car").thenReturn(); // System.out.println(response.getBody().asString());
+            if (response.getStatusCode() == 200) {
+                JsonPath jsonPath = response.getBody().jsonPath();
+                point.getLocation().getGeolocation().setRoadDistance(jsonPath.getString("features[0].properties.summary.distance"));
+                point.getLocation().getGeolocation().setRoadDuration(jsonPath.getString("features[0].properties.summary.duration"));
+                System.out.println("openrouteservice.org -> road Vectors: "+point.getLocation().getGeolocation().estimatedRoadVectorToString());
+            } else { System.out.println("openrouteservice.org -> FAILED request !"); }
+        });
+
+        // Sorting candidate list
+        Collections.sort(pickupPoints);
+        System.out.println(">>>\tpickupPoints sorted list : ");
+        pickupPoints.stream().map(point -> point.getLocation().getGeolocation()).forEach(System.out::println);
+        // pickupPoints.stream().map(point -> point.getLocation().getGeolocation()).forEach(geo -> System.out.println("road Vectors: "+geo.estimatedRoadVectorToString()));
+
+        // Check multi destination request (answer time gain) if possible
+        return Optional.of(pickupPoints);
+    }
+
+    @Override
     public Optional<List<PickupPoint>> getPickupPointByLocality(String locality) {
+        return Optional.of(pickupPointRepository.getByLocality(locality));
+    }
+
+    @Override
+    public Optional<List<PickupPoint>> findPickupPointByLocality(String locality) {
         return Optional.of(pickupPointRepository.findByLocality(locality));
     }
 

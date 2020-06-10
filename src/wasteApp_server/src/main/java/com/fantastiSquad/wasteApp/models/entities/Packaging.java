@@ -16,7 +16,7 @@ public class Packaging {
     private String name;
     private String notation;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "packagingSet")
-//    @Column(name="pickup_point")
+    @Column(name="pickup_point")
     @JsonIgnoreProperties({"packagingSet"})
     private Set<PickupPoint> pickupPointSet  = new HashSet<PickupPoint>();
 

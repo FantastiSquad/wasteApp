@@ -28,7 +28,9 @@ public class Product {
     String name;
     String imageUrl;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinColumn(name = "brand_id")
+    @JoinTable( name = "Product_Brand",
+            joinColumns = @JoinColumn( name = "brand_id" ),
+            inverseJoinColumns = @JoinColumn( name = "product_id" ) )
     @JsonIgnoreProperties("products")
     Brand industry;
     String[] keywords;
@@ -49,6 +51,7 @@ public class Product {
     @JsonIgnore
     Set<ProductBin> bins = new HashSet<ProductBin>();
 
+
     public Product(Long id, @NotNull String barcode, @NotNull String name, String imageUrl, Brand industry, String[] keywords, @Positive Integer quantity, @NotNull String language, @NotNull Boolean newProduct, String category, Set<Packaging> packaging) {
         this.id = id;
         this.barcode = barcode;
@@ -59,7 +62,7 @@ public class Product {
         this.quantity = quantity;
         this.language = language;
         this.newProduct = newProduct;
-        this.category = Category.getDescription(category);
+        this.category = Category.getDescription(category);;
         this.packaging = packaging;
     }
 }

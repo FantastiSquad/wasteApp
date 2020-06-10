@@ -39,40 +39,19 @@ public class Location {
     }
 
     public GeoLocation getGeolocation() { return this.geolocation; }
-
     public void setGeolocation(GeoLocation geolocation) { this.geolocation = geolocation; }
 
-    public String getStreetNumber() {
-        return this.streetNumber;
-    }
+    public String getStreetNumber() { return this.streetNumber; }
+    public void setStreetNumber(String streetNumber) { this.streetNumber = streetNumber; }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
+    public String getStreetName() { return this.streetName; }
+    public void setStreetName(String streetName) { this.streetName = streetName; }
 
-    public String getStreetName() {
-        return this.streetName;
-    }
+    public String getPostalCode() { return this.postalCode; }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getPostalCode() {
-        return this.postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getLocality() {
-        return this.locality;
-    }
-
-    public void setLocality(String locality) {
-        this.locality = locality;
-    }
+    public String getLocality() { return this.locality; }
+    public void setLocality(String locality) { this.locality = locality; }
 
     @Override
     public String toString() {

@@ -10,8 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name="brands")
 @FieldDefaults(level= AccessLevel.PRIVATE)
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString(of = {"id", "name","notation"})
@@ -21,7 +21,12 @@ public class Brand {
     Long id;
     String name;
     String notation;
-    @OneToMany(mappedBy = "industry", cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "industry", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<Product> products = new HashSet<Product>();
 
+    public Brand(String name, String notation, Set<Product> products) {
+        this.name = name;
+        this.notation = notation;
+        this.products = products;
+    }
 }

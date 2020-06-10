@@ -14,6 +14,14 @@ const routes: Routes = [
   {
     path:'city',
     loadChildren: () => import('./folder/tabcity/tabcity.module').then( m => m.TabcityPageModule)
+  },
+  {
+    path:'pickup',
+    loadChildren: () => import('./folder/tab-pickup-points/tab-pickup-points.module').then( m => m.TabPickupPointsPageModule)
+  },
+  {
+    path: 'map',
+    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
   }
 ];
 
