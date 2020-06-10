@@ -1,7 +1,10 @@
 package com.fantastiSquad.wasteApp.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "basket")
@@ -9,19 +12,20 @@ public class Basket {
 
     //	--------------------------------------- Class attributes --------------------------------------------------------------------------
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Product> products = new HashSet<Product>();
+    @MapsId
+    @OneToOne
+    @JsonIgnore
+    private User user;
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private Set<Product> productsBasket = new HashSet<Product>();
 
     //	------------------------------------------ Constructors ---------------------------------------------------------------------------
-    public Basket() {
-        super();
-    }
+    public Basket() {}
 
-    public Basket(Long userId) {
-        this.userId = userId;
+    public Basket(User user) {
+        this.user = user;
     }
 
     //	--------------------------------------- Getters & Setters -------------------------------------------------------------------------
@@ -33,20 +37,20 @@ public class Basket {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Set<Product> getProducts() {
-        return products;
+        return productsBasket;
     }
 
     public void setProducts(Set<Product> products) {
-        this.products = products;
+        this.productsBasket = products;
     }
 
     //	--------------------------------------- Methods --------------------------------------------------------------------------
@@ -54,8 +58,8 @@ public class Basket {
     public String toString() {
         return "Basket{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", products=" + products +
+                ", user=" + user +
+                ", products=" + productsBasket +
                 '}';
     }
 }
