@@ -87,6 +87,7 @@ public class UserController {
         );
        // Need to update user to empty productBin and basket objects before deleting
         userToDelete.getProductBin().setProducts(new HashSet<Product>());
+        userToDelete.getBasket().setProducts(new HashSet<Product>());
         User userToDeleteUpdate = this.userService.saveOrUpdateUser(userToDelete).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something goes wrong when trying to delete user")
         );
