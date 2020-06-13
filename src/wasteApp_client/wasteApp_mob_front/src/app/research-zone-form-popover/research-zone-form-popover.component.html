@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="success">
+      <ion-title>Recherche</ion-title>
+      <ion-buttons slot="end">
+        <ion-icon name="close" color="light" (click)="closePopover()"></ion-icon>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <ion-card>
+      <ion-card-header>
+          <ion-card-title></ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+          <form (ngSubmit)="localityConfirm()">
+              <ion-item>
+                  <ion-label>Communes</ion-label>
+                  <ion-input type="search" [(ngModel)]="locality" name="locality" placeholder="..." clearInput></ion-input>
+              </ion-item>
+          </form>
+      </ion-card-content>
+  </ion-card>
+</ion-content>

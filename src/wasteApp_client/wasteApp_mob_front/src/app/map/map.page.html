@@ -14,26 +14,62 @@
 
 <ion-content [fullscreen]="true">
 <!-- <ion-content> -->
-  <ion-card>
+  <!-- <ion-card  slot="fixed">
     <ion-card-header>
       <ion-card-title>Zone de recherche</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <!-- <ion-item>Latitude: {{ latitude }}</ion-item>
-      <ion-item>Longitude: {{ longitude }}</ion-item>
-      <ion-item>Accuracy: {{ accuracy }}</ion-item>
-      <ion-item>Adresse: {{ address }}</ion-item> -->
       <form (ngSubmit)="localityConfirm()">
-        <!-- <ion-item  color="success"> -->
         <ion-item>
           <ion-label>Locality</ion-label>
           <ion-input type="search" [(ngModel)]="locality" name="locality" placeholder="Locality input" clearInput></ion-input>
         </ion-item>
       </form>
-    </ion-card-content>
+    </ion-card-content> -->
     <!-- <ion-button (click)="getGeoLocation()" expand="block">
       Get GPS Location
-    </ion-button> -->
-  </ion-card>
+    </ion-button>
+  </ion-card> -->
   <div id="mapId" style="width: 100%; height: 100%"></div>
 </ion-content>
+
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="light">
+    <ion-icon name="search-sharp" size="large" color="success"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button color="light">
+      <!-- <ion-icon name="home" color="success" (click)="openResearchZoneModal()"></ion-icon> -->
+      <!-- <ion-icon name="create" size="large" color="success" (click)="openResearchZoneModal()"></ion-icon> -->
+      <ion-icon name="trail-sign" size="large" color="success" (click)="openResearchZonePopover()"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="light">
+      <ion-icon name="trail-sign" size="large" color="success" (click)="openResearchZoneModal()"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="light">
+      <ion-icon name="locate" size="large" color="success" (click)="geoLocate()"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="light">
+      <ion-icon name="analytics-sharp" size="large" color="success" (click)="tracker()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab-button color="success">
+    <ion-icon name="scan-circle" size="large"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button color="success">
+      <ion-icon name="layers" size="large"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="success">
+      <ion-icon name="search-circle" size="large"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="success">
+      <ion-icon name="bookmarks"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+

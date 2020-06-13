@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiHelperService } from './shared/services/api-helper.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ResearchZoneFormPageModule } from './research-zone-form/research-zone-form.module';
+import { ResearchZoneFormPopoverModule } from './research-zone-form-popover/research-zone-form-popover.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +20,9 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ResearchZoneFormPageModule,
+    ResearchZoneFormPopoverModule,
   ],
   providers: [
     StatusBar,

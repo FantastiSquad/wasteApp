@@ -27,7 +27,7 @@ export class ApiHelperService {
   }
 
   public async request({ endpoint, method = 'GET', data = {}, queryParams = {}}:
-                 {endpoint: string; method?:string ;data?: object; queryParams?: any;}): Promise<any>{
+    {endpoint: string; method?:string ;data?: object; queryParams?: any;}): Promise<any>{
     const methodWanted = method.toLowerCase();
     const url = environment.base_url + endpoint;
     const requestOptions = {
