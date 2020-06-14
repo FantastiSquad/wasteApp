@@ -5,7 +5,7 @@ export class GeoLocation {
     private roadDistance: string ;
     private roadDuration: string ;
 
-    constructor(latitude: string, longitude: string, roadDistance: string, roadDuration: string){
+    constructor(latitude: string, longitude: string, roadDistance?: string, roadDuration?: string){
         this.latitude = latitude;
         this.longitude = longitude;
         this.roadDistance = roadDistance;

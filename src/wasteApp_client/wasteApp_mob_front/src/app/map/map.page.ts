@@ -5,6 +5,7 @@ import * as Leaflet from 'leaflet';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { ResearchZoneFormPage } from '../research-zone-form/research-zone-form.page';
 import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
+import { Geolocation } from '@capacitor/core';
 
 @Component({
   selector: 'app-map',
@@ -19,6 +20,8 @@ export class MapPage implements OnInit, OnDestroy {
   //public locality = new FormControl('');
   public locality: string = "Nice";
   @Input() public localities: string[] = ["Nice"];
+
+  public isGeolocated: boolean = false;
 
   // Location coordinates : default : Nice / Colline du château / point de vue
   //marker: any;
@@ -36,7 +39,7 @@ export class MapPage implements OnInit, OnDestroy {
   markerGeoloc: Leaflet.icon;
   markerPickup: Leaflet.icon;
   markerRecycler: Leaflet.icon;
-  //marker: Leaflet.marker;
+  marker: Leaflet.marker;
   //overlayMaps: any;
 
   constructor(
@@ -116,8 +119,6 @@ export class MapPage implements OnInit, OnDestroy {
           this.pickupPoints.push(...points);
           console.log(">>> pickupPoints: "); console.log(this.pickupPoints);
         })
-
-
       }
     }
   }
@@ -129,9 +130,12 @@ export class MapPage implements OnInit, OnDestroy {
       this.localities= this.locality.split(" ");
       console.log("this.localities: "+this.localities);
 
-      // get & wait list of pickup POints
+      // get & wait list of pickup Points by localities
       await this.getPickupPointsByLocalities(this.localities);
 
+      // disable geolocation mode if necessary
+      if (this.pickupPoints.length) { this.isGeolocated = false; }
+      
       // update pickupPOints LayerGroup
       this.leafletPickupPointsMarkerUpdate();
     }
@@ -204,12 +208,14 @@ export class MapPage implements OnInit, OnDestroy {
         this.layerRecyclers.addTo(this.map);
       }
 
-      // recenter maps
-      console.log("> Map recentering  ...");
-      let centerLat = sumLatitude/markerNumber; console.log("centerLat: " + centerLat.toFixed(6))
-      let centerLon = sumLongitude/markerNumber; console.log("centerLon: " + centerLon.toFixed(6))
-      // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
-      this.map.flyTo([""+centerLat.toFixed(6),""+centerLon.toFixed(6)], this.zoom);
+      // recenter maps if not geolocated
+      if (!this.isGeolocated) {
+        console.log("> Map recentering  ...");
+        let centerLat = sumLatitude/markerNumber; console.log("centerLat: " + centerLat.toFixed(6))
+        let centerLon = sumLongitude/markerNumber; console.log("centerLon: " + centerLon.toFixed(6))
+        // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
+        this.map.flyTo([""+centerLat.toFixed(6),""+centerLon.toFixed(6)], this.zoom);
+      }
     }
   }
 
@@ -333,6 +339,59 @@ export class MapPage implements OnInit, OnDestroy {
     return await popover.present();
   }
   
-  geoLocate() { console.log("MapPage.GeoLocate()");}
+  async findBySquaredGeolocation(latitude: string, longitude: string, side?: string) {
+    console.log(">>> MapPage.findBySquaredGeolocation("+latitude+","+longitude+","+side+")");
+
+    // clean pickupPoints
+    while(this.pickupPoints.length > 0) this.pickupPoints.pop();
+
+    // get & wait list of pickup Points
+    await this.pickupPointService.findBySquaredGeolocation(this.latitude, this.longitude).then(res => {
+      let points = res.map((el) => new PickupPoint(el.id, el.location, el.destination, el.packagingSet));
+      //console.log(">>> points: "+JSON.stringify(points));
+      
+      this.pickupPoints.push(...points);
+      console.log(">>> pickupPoints: "); console.log(this.pickupPoints);
+    })
+  }
+
+  async geoLocate() { 
+    console.log("MapPage.GeoLocate()");
+    Geolocation.getCurrentPosition()
+      .then(async (position) => {
+        // store geolocation
+        this.isGeolocated = true;
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.accuracy = position.coords.accuracy;
+        this.timestamp = (new Date(position.timestamp)).toString();
+        console.log("lat/lon/acc: " + this.latitude +" "+ this.longitude +" "+ this.accuracy);
+        console.log("time: " + this.timestamp);
+        
+        //this.getGeoencoder(position.coords.latitude, position.coords.longitude);
+      
+        //clean geolocation marker if any
+        if ( this.marker) {this.map.removeLayer(this.marker);}
+
+        // mark down geolocation ...
+        this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
+        this.map.addLayer(this.marker);
+
+        // recenter maps
+        console.log("> Map recentering  ...");
+        this.map.flyTo([this.latitude, this.longitude], this.zoom);
+
+        // get & wait list of pickup Points
+        await this.findBySquaredGeolocation(this.latitude, this.longitude);
+        
+        // update pickupPOints LayerGroup
+        this.leafletPickupPointsMarkerUpdate();
+      })
+      .catch((error) => {
+        console.log("Error getting location", error);
+        // popover to indicate error ????
+      });
+  }
+
   tracker() {console.log("MapPage.tracker()");}
 }
