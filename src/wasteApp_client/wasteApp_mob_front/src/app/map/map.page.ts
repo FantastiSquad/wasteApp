@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { PickupPointService } from '../shared/services/pickup-point.service';
 import { PickupPoint } from '../shared/models/pickup-point';
 import * as Leaflet from 'leaflet';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { ResearchZoneFormPage } from '../research-zone-form/research-zone-form.page';
 import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
 import { Geolocation } from '@capacitor/core';
@@ -21,7 +21,8 @@ export class MapPage implements OnInit, OnDestroy {
   public locality: string = "Nice";
   @Input() public localities: string[] = ["Nice"];
 
-  public isGeolocated: boolean = false;
+  public geoLocationMode: boolean = false;
+  public squaredSide: number = 10;
 
   // Location coordinates : default : Nice / Colline du château / point de vue
   //marker: any;
@@ -42,10 +43,15 @@ export class MapPage implements OnInit, OnDestroy {
   marker: Leaflet.marker;
   //overlayMaps: any;
 
+  // centering : sum of pickyPoints geolocation attributes or Geolocation
+  centerLatitude: number;
+  centerLongitude: number;
+
   constructor(
     public pickupPointService: PickupPointService, 
     public modalController: ModalController,
-    private popoverController: PopoverController) {
+    private popoverController: PopoverController,
+    public toastController: ToastController) {
     console.log("MapPage.constructor()");
     // this.getAllPickupPoints();
   }
@@ -112,32 +118,20 @@ export class MapPage implements OnInit, OnDestroy {
         // let points = <PickupPoint[]>await this.pickupPointService.getPickupPointByLocality(locality);
         // console.log(">>> points: "+JSON.stringify(points));
 
-        await this.pickupPointService.getPickupPointsByLocality(locality).then(res => {
-          let points = res.map((el) => new PickupPoint(el.id, el.location, el.destination, el.packagingSet));
-          //console.log(">>> points: "+JSON.stringify(points));
+        await this.pickupPointService.getPickupPointsByLocality(locality)
+          .then(res => {
+            let points = res.map((el) => new PickupPoint(el.id, el.location, el.destination, el.packagingSet));
+            //console.log(">>> points: "+JSON.stringify(points));
 
-          this.pickupPoints.push(...points);
-          console.log(">>> pickupPoints: "); console.log(this.pickupPoints);
-        })
+            this.pickupPoints.push(...points);
+            console.log(">>> pickupPoints: "); console.log(this.pickupPoints);
+          })
+          .catch(async (error) => {
+            console.log("Error getting pickup points", error);
+            // error toasting
+            await this.toaster('Nous sommes navrés mais il nous est impossible de trouver un résultat actuellement.');
+          });
       }
-    }
-  }
-
-  async localityConfirm() {
-    console.log("MapPage.localityConfirm("+this.locality+")");
-    if (this.locality) {
-      this.localities=new Array(this.locality);
-      this.localities= this.locality.split(" ");
-      console.log("this.localities: "+this.localities);
-
-      // get & wait list of pickup Points by localities
-      await this.getPickupPointsByLocalities(this.localities);
-
-      // disable geolocation mode if necessary
-      if (this.pickupPoints.length) { this.isGeolocated = false; }
-      
-      // update pickupPOints LayerGroup
-      this.leafletPickupPointsMarkerUpdate();
     }
   }
 
@@ -208,17 +202,18 @@ export class MapPage implements OnInit, OnDestroy {
         this.layerRecyclers.addTo(this.map);
       }
 
-      // recenter maps if not geolocated
-      if (!this.isGeolocated) {
-        console.log("> Map recentering  ...");
-        let centerLat = sumLatitude/markerNumber; console.log("centerLat: " + centerLat.toFixed(6))
-        let centerLon = sumLongitude/markerNumber; console.log("centerLon: " + centerLon.toFixed(6))
-        // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
-        this.map.flyTo([""+centerLat.toFixed(6),""+centerLon.toFixed(6)], this.zoom);
-      }
+      // recenter maps settings
+      this.centerLatitude = sumLatitude/markerNumber; console.log("centerLat: " + this.centerLatitude.toFixed(7))
+      this.centerLongitude = sumLongitude/markerNumber; console.log("centerLon: " + this.centerLongitude.toFixed(7))
     }
   }
 
+  leafletRecenterMap() {
+          // recenter maps
+          console.log("> Map recentering  ...");
+          // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
+          this.map.flyTo([""+this.centerLatitude.toFixed(6),""+this.centerLongitude.toFixed(6)], this.zoom);
+  }
 
   leafletMap() {
     console.log("MapPage.leafletMap()");
@@ -283,33 +278,45 @@ export class MapPage implements OnInit, OnDestroy {
     this.layerController = Leaflet.control.layers(baseMaps).addTo(this.map);
   }
 
-  
-  async openResearchZoneModal() { 
-    console.log("MapPage.researchZoneModal()");
-    
-    const modal = await this.modalController.create({
-      component: ResearchZoneFormPage,
-      // cssClass: 'my-custom-class',
-      componentProps: {
-        localities: this.localities,
-      },
-      showBackdrop: true,
+  async toaster(message: string, color?: string, duration?: number) {
+    // create toast
+    const toast = await this.toastController.create({
+      position: 'middle',
+      message: message,
+      color: color ? color : 'success',
+      duration: duration ? duration : 2000,
     });
-    modal.onDidDismiss().then(data=>{
-      console.log("MapPage.researchZoneModal().onDidDismiss("+JSON.stringify(data)+")");
-      if (data.data) {
-        // this.locality=data.data;
-        if (data.data.locality) {
-          this.locality=data.data.locality;
-          this.localityConfirm();
-        }
-      } else {
-        if (data.role) { console.log("Modal registered sequence: " + data.role); }
-        console.log("MapPage.researchZoneModal() cancelled");
-      }
-    })
-    return await modal.present();
+
+    //display toast
+    await toast.present();
   }
+  
+  // async openResearchZoneModal() { 
+  //   console.log("MapPage.researchZoneModal()");
+    
+  //   const modal = await this.modalController.create({
+  //     component: ResearchZoneFormPage,
+  //     // cssClass: 'my-custom-class',
+  //     componentProps: {
+  //       localities: this.localities,
+  //     },
+  //     showBackdrop: true,
+  //   });
+  //   modal.onDidDismiss().then(data=>{
+  //     console.log("MapPage.researchZoneModal().onDidDismiss("+JSON.stringify(data)+")");
+  //     if (data.data) {
+  //       // this.locality=data.data;
+  //       if (data.data.locality) {
+  //         this.locality=data.data.locality;
+  //         this.localityConfirm();
+  //       }
+  //     } else {
+  //       if (data.role) { console.log("Modal registered sequence: " + data.role); }
+  //       console.log("MapPage.researchZoneModal() cancelled");
+  //     }
+  //   })
+  //   return await modal.present();
+  // }
 
   async openResearchZonePopover() { 
     console.log("MapPage.openResearchZonePopover()");
@@ -339,7 +346,35 @@ export class MapPage implements OnInit, OnDestroy {
     return await popover.present();
   }
   
-  async findBySquaredGeolocation(latitude: string, longitude: string, side?: string) {
+  async localityConfirm() {
+    console.log("MapPage.localityConfirm("+this.locality+")");
+    if (this.locality) {
+      this.localities=new Array(this.locality);
+      this.localities= this.locality.split(" ");
+      console.log("this.localities: "+this.localities);
+
+      // get & wait list of pickup Points by localities
+      await this.getPickupPointsByLocalities(this.localities);
+
+      // disable geolocation mode if necessary
+      if (this.pickupPoints.length == 0) { 
+        // error toasting
+        await this.toaster('Aucun point de collecte disponible avec les informations founies.');
+        return;
+      }
+
+      // deactivate goLocation mode
+      this.geoLocationMode = false; 
+
+      // update pickupPOints LayerGroup
+      this.leafletPickupPointsMarkerUpdate();
+
+      // recenter map
+      this.leafletRecenterMap();
+    }
+  }
+
+  async findBySquaredGeolocation(latitude: string, longitude: string, side?: number) {
     console.log(">>> MapPage.findBySquaredGeolocation("+latitude+","+longitude+","+side+")");
 
     // clean pickupPoints
@@ -360,7 +395,7 @@ export class MapPage implements OnInit, OnDestroy {
     Geolocation.getCurrentPosition()
       .then(async (position) => {
         // store geolocation
-        this.isGeolocated = true;
+        this.geoLocationMode = true;
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
         this.accuracy = position.coords.accuracy;
@@ -377,19 +412,24 @@ export class MapPage implements OnInit, OnDestroy {
         this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
         this.map.addLayer(this.marker);
 
-        // recenter maps
-        console.log("> Map recentering  ...");
-        this.map.flyTo([this.latitude, this.longitude], this.zoom);
+        // recenter maps settings
+        this.centerLatitude = this.latitude; console.log("centerLat: " + this.centerLatitude.toFixed(7))
+        this.centerLongitude = this.longitude; console.log("centerLon: " + this.centerLongitude.toFixed(7))
+        
+        // recenter map
+        this.leafletRecenterMap();
 
         // get & wait list of pickup Points
-        await this.findBySquaredGeolocation(this.latitude, this.longitude);
+        await this.findBySquaredGeolocation(this.latitude, this.longitude, this.squaredSide);
         
         // update pickupPOints LayerGroup
         this.leafletPickupPointsMarkerUpdate();
       })
-      .catch((error) => {
+      .catch(async (error) => {
         console.log("Error getting location", error);
-        // popover to indicate error ????
+
+        // error toasting
+        await this.toaster('Il nous est impossible de vous géolocaliser.\nVotre GPS est-il bien activé ?');
       });
   }
 

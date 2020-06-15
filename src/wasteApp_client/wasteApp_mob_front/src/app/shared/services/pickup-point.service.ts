@@ -66,12 +66,12 @@ export class PickupPointService {
     return promise;
   }
 
-  public findBySquaredGeolocation(latitude: string, longitude: string, side?: string): Promise<any>{
+  public findBySquaredGeolocation(latitude: string, longitude: string, side?: number): Promise<any>{
     let endpoint = this.endpoint + `/squared`;
     let promise = new Promise((resolve, reject) => {
       this.api.get({ 
         endpoint: endpoint,
-        queryParams: { lat: latitude, lon: longitude, side: side ? side : '' }})
+        queryParams: { lat: latitude, lon: longitude, side: side ? "" + side : '' }})
           .then(
             res => { resolve(res); },
             msg => {  reject(msg); }
