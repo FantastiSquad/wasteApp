@@ -2,8 +2,9 @@
   <ion-toolbar color="success">
     <ion-title>Map</ion-title>
     <ion-buttons slot="end">
-      <ion-icon *ngIf='geoLocationMode' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
-      <ion-icon *ngIf='!geoLocationMode' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
+      <ion-icon *ngIf='geoLocationMode && ! geoTrackerID' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
+      <ion-icon *ngIf='! geoLocationMode && geoTrackerID' name="analytics-sharp" size="large" color="light" (click)="geoTrackerToggle()"></ion-icon>
+      <ion-icon *ngIf='!geoLocationMode && ! geoTrackerID' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -45,7 +46,7 @@
       <ion-icon name="locate" size="large" color="success" (click)="geoLocate()"></ion-icon>
     </ion-fab-button>
     <ion-fab-button color="light">
-      <ion-icon name="analytics-sharp" size="large" color="success" (click)="tracker()"></ion-icon>
+      <ion-icon name="analytics-sharp" size="large" color="success" (click)="geoTrackerToggle()"></ion-icon>
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>

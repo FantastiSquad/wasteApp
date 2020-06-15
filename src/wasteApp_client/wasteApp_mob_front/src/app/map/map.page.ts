@@ -23,6 +23,7 @@ export class MapPage implements OnInit, OnDestroy {
 
   public geoLocationMode: boolean = false;
   public squaredSide: number = 10;
+  public geoTrackerID: any;
 
   // Location coordinates : default : Nice / Colline du château / point de vue
   //marker: any;
@@ -363,8 +364,9 @@ export class MapPage implements OnInit, OnDestroy {
         return;
       }
 
-      // deactivate goLocation mode
-      this.geoLocationMode = false; 
+      // deactivate other mode 
+      this.geoTrackerOFF();
+      this.geoLocateOFF();
 
       // update pickupPOints LayerGroup
       this.leafletPickupPointsMarkerUpdate();
@@ -390,12 +392,28 @@ export class MapPage implements OnInit, OnDestroy {
     })
   }
 
+  leafletGeolocationMarkerUpdate() {
+    //clean geolocation marker if any
+    if ( this.marker) {this.map.removeLayer(this.marker);}
+    
+    // mark down geolocation ...
+    this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
+    this.map.addLayer(this.marker);
+
+  }
+  
+  geoLocateON() { this.geoLocationMode = true;}
+  geoLocateOFF() { this.geoLocationMode = false;}
+
   async geoLocate() { 
     console.log("MapPage.GeoLocate()");
-    Geolocation.getCurrentPosition()
+    Geolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }, )
       .then(async (position) => {
+        // activate geoLocate and deactivate other mode 
+        this.geoTrackerOFF()
+        this.geoLocateON()
+
         // store geolocation
-        this.geoLocationMode = true;
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
         this.accuracy = position.coords.accuracy;
@@ -405,12 +423,15 @@ export class MapPage implements OnInit, OnDestroy {
         
         //this.getGeoencoder(position.coords.latitude, position.coords.longitude);
       
-        //clean geolocation marker if any
-        if ( this.marker) {this.map.removeLayer(this.marker);}
+        // mark current geolocation
+        this.leafletGeolocationMarkerUpdate();
 
-        // mark down geolocation ...
-        this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
-        this.map.addLayer(this.marker);
+        // //clean geolocation marker if any
+        // if ( this.marker) {this.map.removeLayer(this.marker);}
+
+        // // mark down geolocation ...
+        // this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
+        // this.map.addLayer(this.marker);
 
         // recenter maps settings
         this.centerLatitude = this.latitude; console.log("centerLat: " + this.centerLatitude.toFixed(7))
@@ -433,5 +454,67 @@ export class MapPage implements OnInit, OnDestroy {
       });
   }
 
-  tracker() {console.log("MapPage.tracker()");}
+
+  geoTrackerToggle() {
+    console.log("MapPage.geoTrackerToggle()");
+    console.log("geoTrackerID: "+ this.geoTrackerID);
+    if (this.geoTrackerID) { this.geoTrackerOFF();}
+    else { this.geoTrackerON();}
+  }
+
+  async geoTrackerON() {
+    console.log("MapPage.geoTrackerON()");
+    if (!this.geoTrackerID) {
+      // Geolocation.watchPosition({ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }, this.trackPosition,this.trackError)
+      // this.geoTrackerID = Geolocation.watchPosition({ enableHighAccuracy: true }, this.geoTrackPosition);
+      this.geoTrackerID = Geolocation.watchPosition({ enableHighAccuracy: true }, this.geoTrackPosition);
+      console.log("geoTrackerID: "); console.log(this.geoTrackerID);
+      // toasting
+      await this.toaster('geoTracking activé.', 'tertiary', 500);
+    }
+  }
+
+  async geoTrackerOFF() {
+    console.log("MapPage.geoTrackerOFF()");
+    if (this.geoTrackerID) {
+      // clear  geotracking
+      Geolocation.clearWatch(this.geoTrackerID);
+      this.geoTrackerID = null;
+      console.log("geoTrackerID: "+ this.geoTrackerID);
+      // toasting
+      await this.toaster('geoTracking désactivé.', 'tertiary', 500);
+    }
+  }
+
+  geoTrackPosition = async (position) => {
+    console.log("MapPage.trackPosition: "); console.log(position);
+    console.log("geoTrackerID: "+ this.geoTrackerID);
+    if (!this.geoTrackerID) { console.log("tracker should be OFF, cancelling process"); return;}
+    if (position == null) {
+      this.geoTrackerOFF();
+      // error toasting
+      await this.toaster('Il nous est impossible de vous géolocaliser.\nVotre GPS est-il bien activé ?');
+      return;
+    }
+    // store geolocation
+    this.geoLocateOFF();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
+    this.accuracy = position.coords.accuracy;
+    this.timestamp = (new Date(position.timestamp)).toString();
+    console.log("lat/lon/acc: " + this.latitude +" "+ this.longitude +" "+ this.accuracy);
+    console.log("time: " + this.timestamp);
+    
+    // mark current geolocation
+    this.leafletGeolocationMarkerUpdate();
+
+    // recenter maps settings
+    this.centerLatitude = this.latitude; console.log("centerLat: " + this.centerLatitude.toFixed(7))
+    this.centerLongitude = this.longitude; console.log("centerLon: " + this.centerLongitude.toFixed(7))
+
+    // recenter map
+    this.leafletRecenterMap();
+  }
+
+  geoTrackError() {console.log("MapPage.trackError()");}
 }
