@@ -1,7 +1,18 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { PickupPointService } from '../shared/services/pickup-point.service';
 import { PickupPoint } from '../shared/models/pickup-point';
+// import 'leaflet';
 import * as Leaflet from 'leaflet';
+import 'leaflet.awesome-markers';
+
+// extra-marker attempt
+// import * as ExtraMarkers from 'leaflet-extra-markers';
+// import 'leaflet-extra-markers';
+// import "leaflet/dist/leaflet.css";
+// import * as Leaflet from 'leaflet';
+// import "leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css";
+// import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
+
 import { ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { ResearchZoneFormPage } from '../research-zone-form/research-zone-form.page';
 import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
@@ -35,13 +46,16 @@ export class MapPage implements OnInit, OnDestroy {
   // Leaflet Map
   map: Leaflet.Map;
   zoom: number = 13;
-  layerController: Leaflet.control;
-  layerPickups: Leaflet.layerGroup;
-  layerRecyclers: Leaflet.layerGroup;
-  markerGeoloc: Leaflet.icon;
-  markerPickup: Leaflet.icon;
-  markerRecycler: Leaflet.icon;
-  marker: Leaflet.marker;
+  layerController: Leaflet.Control.Layers;
+  layerPickups: Leaflet.LayerGroup;
+  layerRecyclers: Leaflet.LayerGroup;
+  markerGeoloc: Leaflet.Icon;
+  markerPickup: Leaflet.Icon;
+  markerRecycler: Leaflet.Icon;
+  awesomeMarkerGeoloc: Leaflet.AwesomeMarkers.Icon;
+  awesomeMarkerPickup: Leaflet.AwesomeMarkers.Icon;
+  awesomeMarkerRecycler: Leaflet.AwesomeMarkers.Icon;
+  marker: Leaflet.Marker;
   //overlayMaps: any;
 
   // centering : sum of pickyPoints geolocation attributes or Geolocation
@@ -165,28 +179,30 @@ export class MapPage implements OnInit, OnDestroy {
 
       // scan pickuPoints for new markers
       console.log("> pickupPoints scan for new markers  ...");
-      let pickupLat: string;
-      let pickupLon: string;
+      let pickupLat: number;
+      let pickupLon: number;
       let locality: string;
-      let marker: Leaflet.marker
+      let marker: Leaflet.Marker;
       let sumLatitude: number = 0;
       let sumLongitude: number = 0;
 
       this.pickupPoints.forEach(pickup => {
         // console.log("> pickup: "+JSON.stringify(pickup));
         console.log("> pickup: "); console.log(pickup);
-        pickupLat = pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += +pickupLat; //+ convert string to number
-        pickupLon = pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += +pickupLon; //+ convert string to number
+        // pickupLat = pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += +pickupLat; //+ convert string to number
+        // pickupLon = pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += +pickupLon; //+ convert string to number
+        pickupLat = +pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += pickupLat; //+ convert string to number
+        pickupLon = +pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += pickupLon; //+ convert string to number
         locality = pickup.getLocation.getLocality;
         switch ( pickup.getDestination) {
           case "CONTAINER" :
             console.log("> CONTAINER: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.markerPickup}).bindPopup("Point de collecte - " + locality);
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup("Point de collecte - " + locality);
             this.layerPickups.addLayer(marker);
             break;
           case "DECHETTERIE" :
             console.log("> DECHETTERIE: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.markerRecycler}).bindPopup("Déchetterie - " + locality);
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup("Déchetterie - " + locality);
             this.layerRecyclers.addLayer(marker);
             break;
         }
@@ -213,7 +229,8 @@ export class MapPage implements OnInit, OnDestroy {
           // recenter maps
           console.log("> Map recentering  ...");
           // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
-          this.map.flyTo([""+this.centerLatitude.toFixed(6),""+this.centerLongitude.toFixed(6)], this.zoom);
+          // this.map.flyTo([""+this.centerLatitude.toFixed(6),""+this.centerLongitude.toFixed(6)], this.zoom);
+          this.map.flyTo([+this.centerLatitude.toFixed(6),+this.centerLongitude.toFixed(6)], this.zoom);
   }
 
   leafletMap() {
@@ -225,14 +242,15 @@ export class MapPage implements OnInit, OnDestroy {
     // var cdn_base = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { attribution: 'wasty©2020' })
     // var stadia = Leaflet.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: 'wasty©2020' });
     var cdn_voyager = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', { attribution: 'wasty©2020' })
-    var geoportailFrance = Leaflet.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+    // var geoportailFrance = Leaflet.tileLayer('https://wxs.ign.fr/{apikey}/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE={style}&TILEMATRIXSET=PM&FORMAT={format}&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+    var geoportailFrance = Leaflet.tileLayer('https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
       attribution: 'wasty©2020',
       bounds: [[-75, -180], [81, 180]],
       minZoom: 2,
       maxZoom: 19,
-      apikey: 'choisirgeoportail',
-      format: 'image/jpeg',
-      style: 'normal'
+      // apikey: 'choisirgeoportail',
+      // format: 'image/jpeg',
+      // style: 'normal'
     });
     // base Maps
     var baseMaps = {
@@ -242,24 +260,44 @@ export class MapPage implements OnInit, OnDestroy {
     };
 
     // Marker iconing : geolocation, recycler and pickup points
-    this.markerGeoloc = new Leaflet.icon({
+    this.markerGeoloc = new Leaflet.Icon({
       iconUrl: 'assets/marker/marker-base-icon.png',
       shadowUrl: 'assets/marker/marker-shadow.png',
       iconSize: [ 25, 40 ],
       iconAnchor: [ 13, 40 ],
     });
-    this.markerPickup = new Leaflet.icon({
+    this.markerPickup = new Leaflet.Icon({
       iconUrl: 'assets/marker/marker-green-icon.png',
       shadowUrl: 'assets/marker/marker-shadow.png',
       iconSize: [ 25, 40 ],
       iconAnchor: [ 13, 40 ],
     });
-    this.markerRecycler = new Leaflet.icon({
+    this.markerRecycler = new Leaflet.Icon({
       iconUrl: 'assets/marker/marker-yellow-icon.png',
       shadowUrl: 'assets/marker/marker-shadow.png',
       iconSize: [ 25, 40 ],
       iconAnchor: [ 13, 40 ],
     });
+
+    // ExtraMarker iconing: geolocatoin, recycler and pickup points
+    Leaflet.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
+    // this.awesomeMarkerGeoloc = new (Leaflet as any).AwesomeMarkers.icon({
+    this.awesomeMarkerGeoloc = new Leaflet.AwesomeMarkers.Icon({
+      icon: 'home',
+      markerColor: 'blue',
+      iconColor: 'white',
+    })
+    this.awesomeMarkerPickup = new Leaflet.AwesomeMarkers.Icon({
+      icon: 'recycle',
+      markerColor: 'green',
+      iconColor: 'white',
+    })
+    this.awesomeMarkerRecycler = new Leaflet.AwesomeMarkers.Icon({
+      // icon: 'dumpster',
+      icon: 'recycle',
+      markerColor: 'purple',
+      iconColor: 'white',
+    })
 
     this.layerPickups = Leaflet.layerGroup(),
     this.layerRecyclers = Leaflet.layerGroup();
@@ -397,7 +435,7 @@ export class MapPage implements OnInit, OnDestroy {
     if ( this.marker) {this.map.removeLayer(this.marker);}
     
     // mark down geolocation ...
-    this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
+    this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.awesomeMarkerGeoloc}).bindPopup('Position actuelle.'),
     this.map.addLayer(this.marker);
 
   }
@@ -426,18 +464,9 @@ export class MapPage implements OnInit, OnDestroy {
         // mark current geolocation
         this.leafletGeolocationMarkerUpdate();
 
-        // //clean geolocation marker if any
-        // if ( this.marker) {this.map.removeLayer(this.marker);}
-
-        // // mark down geolocation ...
-        // this.marker = Leaflet.marker([this.latitude, this.longitude], {icon: this.markerGeoloc}).bindPopup('Position actuelle.'),
-        // this.map.addLayer(this.marker);
-
-        // recenter maps settings
+        // recenter map
         this.centerLatitude = this.latitude; console.log("centerLat: " + this.centerLatitude.toFixed(7))
         this.centerLongitude = this.longitude; console.log("centerLon: " + this.centerLongitude.toFixed(7))
-        
-        // recenter map
         this.leafletRecenterMap();
 
         // get & wait list of pickup Points
