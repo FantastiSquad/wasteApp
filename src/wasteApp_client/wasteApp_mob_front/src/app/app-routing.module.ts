@@ -35,11 +35,16 @@ const routes: Routes = [
   //   loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   // },
   {
+
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
   },
 
- 
+  {
+    path: 'map',
+    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
+  }
+
 ];
 
 @NgModule({

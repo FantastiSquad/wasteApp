@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="pickup_points")
-public class PickupPoint {
+public class PickupPoint implements Comparable<Object>  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +53,31 @@ public class PickupPoint {
 
     public Set<Packaging> getPackagingSet() { return this.packagingSet; }
     public void setPackagingSet(Set<Packaging> packagingSet) { this.packagingSet = packagingSet; }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o.getClass().equals(PickupPoint.class)) {
+
+            PickupPoint candidateItem = (PickupPoint) o;
+            int compareDistance = 0;
+
+            if (this.getLocation().getGeolocation().getRoadDuration() != null) {
+                // natural order comparator flag for occurrence (Reversed would be with negative sign in front of compare calcul)
+                compareDistance = Double.valueOf(this.getLocation().getGeolocation().getRoadDuration()).compareTo(Double.valueOf(candidateItem.getLocation().getGeolocation().getRoadDuration()));
+            }
+
+            // if both items have same occurrence value, we sort on item name
+            if (compareDistance == 0) {
+                if (this.getLocation().getGeolocation().getRoadDistance() != null) {
+                    return Double.valueOf(this.getLocation().getGeolocation().getRoadDistance()).compareTo(Double.valueOf(candidateItem.getLocation().getGeolocation().getRoadDistance()));
+                }
+            }
+
+            // else return initial compare value
+            return compareDistance;
+        }
+        return -1;
+    }
 
     @Override
     public String toString() {
