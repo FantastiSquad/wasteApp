@@ -3,7 +3,7 @@
     <ion-title>
       <ion-icon *ngIf='geoLocationMode' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
       <ion-icon *ngIf='!geoLocationMode' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
-      {{ locality ? locality : 'Map' }}
+      {{ locality ? locality : 'Map' | titlecase}}
     </ion-title>
     <ion-buttons slot="end">
       <ion-icon *ngIf='geoTrackerID' name="analytics-sharp" size="large" color="light" (click)="geoTrackerToggle()"></ion-icon>

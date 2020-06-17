@@ -1,22 +1,12 @@
+import '@angular/common'; // for tilecase pipe
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { PickupPointService } from '../shared/services/pickup-point.service';
 import { PickupPoint } from '../shared/models/pickup-point';
-// import 'leaflet';
 import * as Leaflet from 'leaflet';
-import 'leaflet.awesome-markers';
-
-// extra-marker attempt
-// import * as ExtraMarkers from 'leaflet-extra-markers';
-// import 'leaflet-extra-markers';
-// import "leaflet/dist/leaflet.css";
-// import * as Leaflet from 'leaflet';
-// import "leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css";
-// import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
-
-import { ModalController, PopoverController, ToastController } from '@ionic/angular';
-import { ResearchZoneFormPage } from '../research-zone-form/research-zone-form.page';
+import { PopoverController, ToastController } from '@ionic/angular';
 import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
 import { Geolocation } from '@capacitor/core';
+import { GeocoderService } from '../shared/services/geocoder.service';
 
 @Component({
   selector: 'app-map',
@@ -63,8 +53,8 @@ export class MapPage implements OnInit, OnDestroy {
   centerLongitude: number;
 
   constructor(
-    public pickupPointService: PickupPointService, 
-    public modalController: ModalController,
+    public pickupPointService: PickupPointService,
+    public geocoder: GeocoderService,
     private popoverController: PopoverController,
     public toastController: ToastController) {
     console.log("MapPage.constructor()");
@@ -122,16 +112,11 @@ export class MapPage implements OnInit, OnDestroy {
   async getPickupPointsByLocalities(localities: string[]) {
     console.log(">>> MapPage.getPickupPointsByLocalities("+localities+")");
     if (localities.length != 0) {
-      // this.pickupPoints= PickupPoint[];
+      // clear pickupPoints
       while(this.pickupPoints.length > 0) this.pickupPoints.pop();
 
-      // localities.forEach(async locality => {
-      // })
       for (let locality of localities) {
         console.log(">>> locality: "+locality);
-
-        // let points = <PickupPoint[]>await this.pickupPointService.getPickupPointByLocality(locality);
-        // console.log(">>> points: "+JSON.stringify(points));
 
         await this.pickupPointService.getPickupPointsByLocality(locality)
           .then(res => {
@@ -181,6 +166,8 @@ export class MapPage implements OnInit, OnDestroy {
       console.log("> pickupPoints scan for new markers  ...");
       let pickupLat: number;
       let pickupLon: number;
+      let pickupRoadDuration: number;
+      let pickupRoadDistance: number;
       let locality: string;
       let marker: Leaflet.Marker;
       let sumLatitude: number = 0;
@@ -190,29 +177,34 @@ export class MapPage implements OnInit, OnDestroy {
       this.pickupPoints.forEach(pickup => {
         // console.log("> pickup: "+JSON.stringify(pickup));
         console.log("> pickup: "); console.log(pickup);
-        // pickupLat = pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += +pickupLat; //+ convert string to number
-        // pickupLon = pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += +pickupLon; //+ convert string to number
         pickupLat = +pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += pickupLat; //+ convert string to number
         pickupLon = +pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += pickupLon; //+ convert string to number
         locality = pickup.getLocation.getLocality;
         popupHtml = 
-            '<a href="http://maps.google.com?q=' + pickupLat + ',' + pickupLon + '" target="_blank">'
-              + '<em>' + locality + '</em>'
-            + '</a>'
-          + '</p>'; 
+        ' - <a href="http://maps.google.com?q=' + pickupLat + ',' + pickupLon + '" target="_blank">'
+        // + '<em>Nav</em>'
+        + '<ion-icon name="navigate" size="small"></ion-icon>'
+        + '</a>'
+        + '<br />' + locality;
+
+        pickupRoadDuration = +pickup.getLocation.getGeoLocation.getRoadDuration;
+        pickupRoadDistance = +pickup.getLocation.getGeoLocation.getRoadDistance;
+        if (this.geoLocationMode) { 
+          popupHtml += '<br />Durée: '+(pickupRoadDuration/60).toFixed(0)+'min - Distance: '+pickupRoadDistance.toFixed(0)+'m' 
+        }
+        popupHtml += '</p>'
+
         switch ( pickup.getDestination) {
           case "CONTAINER" :
             console.log("> CONTAINER: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            // marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup("Point de collecte - " + locality);
-            popupHtml = '<p>Point de collecte - ' + popupHtml;
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup(popupHtml);
+            popupHtml = '<p>Point de collecte' + popupHtml;
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup(popupHtml, { minWidth : 150 });
             this.layerPickups.addLayer(marker);
             break;
           case "DECHETTERIE" :
             console.log("> DECHETTERIE: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            // marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup(" - " + locality);
-            popupHtml = '<p>Déchetterie - ' + popupHtml;
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup(popupHtml);
+            popupHtml = '<p>Déchetterie' + popupHtml;
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup(popupHtml, { minWidth : 150 });
             this.layerRecyclers.addLayer(marker);
             break;
         }
@@ -272,24 +264,24 @@ export class MapPage implements OnInit, OnDestroy {
     };
 
     // Marker iconing : geolocation, recycler and pickup points
-    this.markerGeoloc = new Leaflet.Icon({
-      iconUrl: 'assets/marker/marker-base-icon.png',
-      shadowUrl: 'assets/marker/marker-shadow.png',
-      iconSize: [ 25, 40 ],
-      iconAnchor: [ 13, 40 ],
-    });
-    this.markerPickup = new Leaflet.Icon({
-      iconUrl: 'assets/marker/marker-green-icon.png',
-      shadowUrl: 'assets/marker/marker-shadow.png',
-      iconSize: [ 25, 40 ],
-      iconAnchor: [ 13, 40 ],
-    });
-    this.markerRecycler = new Leaflet.Icon({
-      iconUrl: 'assets/marker/marker-yellow-icon.png',
-      shadowUrl: 'assets/marker/marker-shadow.png',
-      iconSize: [ 25, 40 ],
-      iconAnchor: [ 13, 40 ],
-    });
+    // this.markerGeoloc = new Leaflet.Icon({
+    //   iconUrl: 'assets/marker/marker-base-icon.png',
+    //   shadowUrl: 'assets/marker/marker-shadow.png',
+    //   iconSize: [ 25, 40 ],
+    //   iconAnchor: [ 13, 40 ],
+    // });
+    // this.markerPickup = new Leaflet.Icon({
+    //   iconUrl: 'assets/marker/marker-green-icon.png',
+    //   shadowUrl: 'assets/marker/marker-shadow.png',
+    //   iconSize: [ 25, 40 ],
+    //   iconAnchor: [ 13, 40 ],
+    // });
+    // this.markerRecycler = new Leaflet.Icon({
+    //   iconUrl: 'assets/marker/marker-yellow-icon.png',
+    //   shadowUrl: 'assets/marker/marker-shadow.png',
+    //   iconSize: [ 25, 40 ],
+    //   iconAnchor: [ 13, 40 ],
+    // });
 
     // ExtraMarker iconing: geolocatoin, recycler and pickup points
     Leaflet.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
@@ -341,32 +333,9 @@ export class MapPage implements OnInit, OnDestroy {
     await toast.present();
   }
   
-  // async openResearchZoneModal() { 
-  //   console.log("MapPage.researchZoneModal()");
-    
-  //   const modal = await this.modalController.create({
-  //     component: ResearchZoneFormPage,
-  //     // cssClass: 'my-custom-class',
-  //     componentProps: {
-  //       localities: this.localities,
-  //     },
-  //     showBackdrop: true,
-  //   });
-  //   modal.onDidDismiss().then(data=>{
-  //     console.log("MapPage.researchZoneModal().onDidDismiss("+JSON.stringify(data)+")");
-  //     if (data.data) {
-  //       // this.locality=data.data;
-  //       if (data.data.locality) {
-  //         this.locality=data.data.locality;
-  //         this.localityConfirm();
-  //       }
-  //     } else {
-  //       if (data.role) { console.log("Modal registered sequence: " + data.role); }
-  //       console.log("MapPage.researchZoneModal() cancelled");
-  //     }
-  //   })
-  //   return await modal.present();
-  // }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // BY LOCALITY RESEARCH
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   async openResearchZonePopover() { 
     console.log("MapPage.openResearchZonePopover()");
@@ -400,8 +369,11 @@ export class MapPage implements OnInit, OnDestroy {
     console.log("MapPage.localityConfirm("+this.locality+")");
     if (this.locality) {
       this.localities=new Array(this.locality);
-      this.localities= this.locality.split(" ");
+      this.localities= this.locality.split(" ").map((locality) => 
+        locality.charAt(0).toUpperCase() + locality.substr(1).toLowerCase()
+      );
       console.log("this.localities: "+this.localities);
+      this.locality=this.localities.join(" ");
 
       // get & wait list of pickup Points by localities
       await this.getPickupPointsByLocalities(this.localities);
@@ -414,7 +386,7 @@ export class MapPage implements OnInit, OnDestroy {
       }
 
       // deactivate other mode 
-      this.geoTrackerOFF();
+      // this.geoTrackerOFF();
       this.geoLocateOFF();
 
       // update pickupPOints LayerGroup
@@ -424,6 +396,10 @@ export class MapPage implements OnInit, OnDestroy {
       this.leafletRecenterMap();
     }
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // GEOLOCATION
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   async findBySquaredGeolocation(latitude: string, longitude: string, side?: number) {
     console.log(">>> MapPage.findBySquaredGeolocation("+latitude+","+longitude+","+side+")");
@@ -459,7 +435,7 @@ export class MapPage implements OnInit, OnDestroy {
     Geolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }, )
       .then(async (position) => {
         // activate geoLocate and deactivate other mode 
-        this.geoTrackerOFF()
+        // this.geoTrackerOFF()
         this.geoLocateON()
 
         // store geolocation
@@ -470,7 +446,8 @@ export class MapPage implements OnInit, OnDestroy {
         console.log("lat/lon/acc: " + this.latitude +" "+ this.longitude +" "+ this.accuracy);
         console.log("time: " + this.timestamp);
         
-        //this.getGeoencoder(position.coords.latitude, position.coords.longitude);
+        // get getcoded locality
+        await this.geocoder.getAddress(this.latitude, this.longitude).then(res => { this.locality = res.locality; })
       
         // mark current geolocation
         this.leafletGeolocationMarkerUpdate();
@@ -494,6 +471,9 @@ export class MapPage implements OnInit, OnDestroy {
       });
   }
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // GEOTRACKING
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   geoTrackerToggle() {
     console.log("MapPage.geoTrackerToggle()");
@@ -505,8 +485,7 @@ export class MapPage implements OnInit, OnDestroy {
   async geoTrackerON() {
     console.log("MapPage.geoTrackerON()");
     if (!this.geoTrackerID) {
-      // Geolocation.watchPosition({ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }, this.trackPosition,this.trackError)
-      // this.geoTrackerID = Geolocation.watchPosition({ enableHighAccuracy: true }, this.geoTrackPosition);
+      // activate  geotracking
       this.geoTrackerID = Geolocation.watchPosition({ enableHighAccuracy: true }, this.geoTrackPosition);
       console.log("geoTrackerID: "); console.log(this.geoTrackerID);
       // toasting

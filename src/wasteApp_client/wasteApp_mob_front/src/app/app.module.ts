@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiHelperService } from './shared/services/api-helper.service';
 import { HttpClientModule } from '@angular/common/http';
-import { ResearchZoneFormPageModule } from './research-zone-form/research-zone-form.module';
 import { ResearchZoneFormPopoverModule } from './research-zone-form-popover/research-zone-form-popover.module';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { ResearchZoneFormPopoverModule } from './research-zone-form-popover/rese
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    ResearchZoneFormPageModule,
     ResearchZoneFormPopoverModule,
   ],
   providers: [
