@@ -1,0 +1,42 @@
+ion-content {
+    font-family: 'Muli', sans-serif;
+}
+ion-slide {
+
+    height: 100vh;
+    flex-direction: column;
+    text-align: justify;
+}
+
+ion-img {
+    max-width: 50vw;
+    max-height: 50vh;
+    overflow: hidden;
+}
+p {
+    padding: 1em;
+    text-align: center;
+}
+h2 {
+    padding: 1em;
+    text-align: center;
+}
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.step-one {
+    background-image: linear-gradient(-225deg, #20E2D7 0%, #F9FEA5 100%);
+    color: rgb(10, 59, 102);
+}
+.step-two {
+    //background-image: linear-gradient(-225deg, #DFFFCD 0%, #90F9C4 48%, #39F3BB 100%);
+    background-image: linear-gradient(-225deg, #20E2D7 0%, #F9FEA5 100%);
+    color: rgb(10, 59, 102);
+}
+.step-three {
+    background-color: #20E2D7;
+    color: rgb(10, 59, 102);
+    
+}

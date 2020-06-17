@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiHelperService } from './shared/services/api-helper.service';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage';
+import { SharedDirectivesModule } from './directives/shared-directives.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,8 +19,10 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedDirectivesModule
   ],
   providers: [
     StatusBar,
