@@ -2,15 +2,14 @@
 npm i --save leaflet.awesome-markers @types/leaflet @types/leaflet.awesome-markers
 
 # fontawesome css :
-npm i --save font-awesome
+npm i --save @fortawesome/fontawesome-free
 
 # global.scss :
 /* Leaflet.awesome-markers */
 @import "~leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
 /* FontAwesome for Leaflet.awesome-markers */
-@import "~font-awesome/css/font-awesome.min.css";
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
 
-missing dumpster unfortunately ... 
 and lack of colours ...
 
 
