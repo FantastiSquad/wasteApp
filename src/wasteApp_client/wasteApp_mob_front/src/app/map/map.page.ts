@@ -3,6 +3,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { PickupPointService } from '../shared/services/pickup-point.service';
 import { PickupPoint } from '../shared/models/pickup-point';
 import * as Leaflet from 'leaflet';
+import 'leaflet.awesome-markers';
 import { PopoverController, ToastController } from '@ionic/angular';
 import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
 import { Geolocation } from '@capacitor/core';
@@ -185,7 +186,7 @@ export class MapPage implements OnInit, OnDestroy {
         // + '<em>Nav</em>'
         + '<ion-icon name="navigate" size="small"></ion-icon>'
         + '</a>'
-        + '<br />' + locality;
+        + '<br />' + locality.charAt(0).toUpperCase() + locality.substr(1).toLowerCase();
 
         pickupRoadDuration = +pickup.getLocation.getGeoLocation.getRoadDuration;
         pickupRoadDistance = +pickup.getLocation.getGeoLocation.getRoadDistance;
@@ -338,6 +339,7 @@ export class MapPage implements OnInit, OnDestroy {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   async openResearchZonePopover() { 
+    console.log("##########################################");
     console.log("MapPage.openResearchZonePopover()");
     
     const popover = await this.popoverController.create({
@@ -366,6 +368,7 @@ export class MapPage implements OnInit, OnDestroy {
   }
   
   async localityConfirm() {
+    console.log("##########################################");
     console.log("MapPage.localityConfirm("+this.locality+")");
     if (this.locality) {
       this.localities=new Array(this.locality);
@@ -431,6 +434,7 @@ export class MapPage implements OnInit, OnDestroy {
   geoLocateOFF() { this.geoLocationMode = false;}
 
   async geoLocate() { 
+    console.log("##########################################");
     console.log("MapPage.GeoLocate()");
     Geolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true }, )
       .then(async (position) => {
@@ -476,6 +480,7 @@ export class MapPage implements OnInit, OnDestroy {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   geoTrackerToggle() {
+    console.log("##########################################");
     console.log("MapPage.geoTrackerToggle()");
     console.log("geoTrackerID: "+ this.geoTrackerID);
     if (this.geoTrackerID) { this.geoTrackerOFF();}
@@ -487,7 +492,7 @@ export class MapPage implements OnInit, OnDestroy {
     if (!this.geoTrackerID) {
       // activate  geotracking
       this.geoTrackerID = Geolocation.watchPosition({ enableHighAccuracy: true }, this.geoTrackPosition);
-      console.log("geoTrackerID: "); console.log(this.geoTrackerID);
+      console.log("geoTrackerID: " + this.geoTrackerID);
       // toasting
       await this.toaster('geoTracking activé.', 'tertiary', 500);
     }
@@ -510,17 +515,18 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   geoTrackPosition = async (position) => {
+    console.log("##########################################");
     console.log("MapPage.trackPosition: "); console.log(position);
     console.log("geoTrackerID: "+ this.geoTrackerID);
     if (!this.geoTrackerID) { console.log("tracker should be OFF, cancelling process"); return;}
     if (position == null) {
-      this.geoTrackerOFF();
+      // this.geoTrackerOFF();
       // error toasting
       await this.toaster('Il nous est impossible de vous géolocaliser.\nVotre GPS est-il bien activé ?');
       return;
     }
     // store geolocation
-    this.geoLocateOFF();
+    // this.geoLocateOFF();
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
     this.accuracy = position.coords.accuracy;
