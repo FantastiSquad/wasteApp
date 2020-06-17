@@ -185,6 +185,7 @@ export class MapPage implements OnInit, OnDestroy {
       let marker: Leaflet.Marker;
       let sumLatitude: number = 0;
       let sumLongitude: number = 0;
+      let popupHtml:string;
 
       this.pickupPoints.forEach(pickup => {
         // console.log("> pickup: "+JSON.stringify(pickup));
@@ -194,15 +195,24 @@ export class MapPage implements OnInit, OnDestroy {
         pickupLat = +pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += pickupLat; //+ convert string to number
         pickupLon = +pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += pickupLon; //+ convert string to number
         locality = pickup.getLocation.getLocality;
+        popupHtml = 
+            '<a href="http://maps.google.com?q=' + pickupLat + ',' + pickupLon + '" target="_blank">'
+              + '<em>' + locality + '</em>'
+            + '</a>'
+          + '</p>'; 
         switch ( pickup.getDestination) {
           case "CONTAINER" :
             console.log("> CONTAINER: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup("Point de collecte - " + locality);
+            // marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup("Point de collecte - " + locality);
+            popupHtml = '<p>Point de collecte - ' + popupHtml;
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerPickup}).bindPopup(popupHtml);
             this.layerPickups.addLayer(marker);
             break;
           case "DECHETTERIE" :
             console.log("> DECHETTERIE: "+locality+" ("+pickupLat+"/"+pickupLon+")");
-            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup("Déchetterie - " + locality);
+            // marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup(" - " + locality);
+            popupHtml = '<p>Déchetterie - ' + popupHtml;
+            marker = Leaflet.marker([pickupLat, pickupLon], {icon: this.awesomeMarkerRecycler}).bindPopup(popupHtml);
             this.layerRecyclers.addLayer(marker);
             break;
         }
@@ -296,7 +306,7 @@ export class MapPage implements OnInit, OnDestroy {
     })
     this.awesomeMarkerRecycler = new Leaflet.AwesomeMarkers.Icon({
       icon: 'dumpster',
-      markerColor: 'purple',
+      markerColor: 'orange', //'red', 'orange', 'purple',
       iconColor: 'white',
     })
 
