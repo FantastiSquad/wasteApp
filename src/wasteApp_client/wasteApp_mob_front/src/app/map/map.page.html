@@ -1,10 +1,12 @@
 <ion-header>
   <ion-toolbar color="success">
-    <ion-title>Map</ion-title>
+    <ion-title>
+      <ion-icon *ngIf='geoLocationMode' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
+      <ion-icon *ngIf='!geoLocationMode' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
+      {{ locality ? locality : 'Map' }}
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-icon *ngIf='geoLocationMode && ! geoTrackerID' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
-      <ion-icon *ngIf='! geoLocationMode && geoTrackerID' name="analytics-sharp" size="large" color="light" (click)="geoTrackerToggle()"></ion-icon>
-      <ion-icon *ngIf='!geoLocationMode && ! geoTrackerID' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
+      <ion-icon *ngIf='geoTrackerID' name="analytics-sharp" size="large" color="light" (click)="geoTrackerToggle()"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

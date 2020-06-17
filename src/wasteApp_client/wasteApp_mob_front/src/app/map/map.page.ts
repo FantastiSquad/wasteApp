@@ -225,12 +225,14 @@ export class MapPage implements OnInit, OnDestroy {
     }
   }
 
-  leafletRecenterMap() {
+  leafletRecenterMap(panMode?: boolean, zoom?: number) {
           // recenter maps
           console.log("> Map recentering  ...");
           // this.map.panTo(sumLatitude/markerNumber,sumLongitude/markerNumber);
-          // this.map.flyTo([""+this.centerLatitude.toFixed(6),""+this.centerLongitude.toFixed(6)], this.zoom);
-          this.map.flyTo([+this.centerLatitude.toFixed(6),+this.centerLongitude.toFixed(6)], this.zoom);
+          if (panMode)
+            this.map.panTo([+this.centerLatitude.toFixed(6),+this.centerLongitude.toFixed(6)]);
+          else
+            this.map.flyTo([+this.centerLatitude.toFixed(6),+this.centerLongitude.toFixed(6)], zoom ? zoom : this.zoom);
   }
 
   leafletMap() {
@@ -506,7 +508,11 @@ export class MapPage implements OnInit, OnDestroy {
   async geoTrackerOFF() {
     console.log("MapPage.geoTrackerOFF()");
     if (this.geoTrackerID) {
+      // unsubscribe geotracking
+      // console.log("unsubscribe geotracking");
+      // this.geoTrackerID.unsubscribe();
       // clear  geotracking
+      console.log("clear geotracking");
       Geolocation.clearWatch(this.geoTrackerID);
       this.geoTrackerID = null;
       console.log("geoTrackerID: "+ this.geoTrackerID);
@@ -542,7 +548,7 @@ export class MapPage implements OnInit, OnDestroy {
     this.centerLongitude = this.longitude; console.log("centerLon: " + this.centerLongitude.toFixed(7))
 
     // recenter map
-    this.leafletRecenterMap();
+    this.leafletRecenterMap(true, this.map.getZoom());
   }
 
   geoTrackError() {console.log("MapPage.trackError()");}
