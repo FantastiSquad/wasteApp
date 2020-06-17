@@ -295,8 +295,7 @@ export class MapPage implements OnInit, OnDestroy {
       iconColor: 'white',
     })
     this.awesomeMarkerRecycler = new Leaflet.AwesomeMarkers.Icon({
-      // icon: 'dumpster',
-      icon: 'recycle',
+      icon: 'dumpster',
       markerColor: 'purple',
       iconColor: 'white',
     })
