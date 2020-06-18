@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MapPage } from './map.page';
+import { MapPage } from './tab-map.page';
 
 const routes: Routes = [
   {

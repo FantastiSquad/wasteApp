@@ -5,14 +5,14 @@ import { PickupPoint } from '../shared/models/pickup-point';
 import * as Leaflet from 'leaflet';
 import 'leaflet.awesome-markers';
 import { PopoverController, ToastController } from '@ionic/angular';
-import { ResearchZoneFormPopoverComponent } from '../research-zone-form-popover/research-zone-form-popover.component';
+import { ResearchZoneFormPopoverComponent } from '../pages/research-zone-form-popover/research-zone-form-popover.component';
 import { Geolocation } from '@capacitor/core';
 import { GeocoderService } from '../shared/services/geocoder.service';
 
 @Component({
   selector: 'app-map',
-  templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  templateUrl: './tab-map.page.html',
+  styleUrls: ['./tab-map.page.scss'],
 })
 export class MapPage implements OnInit, OnDestroy {
 

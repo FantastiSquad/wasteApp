@@ -31,8 +31,8 @@ const routes: Routes = [
         loadChildren: () => import('../tab-bin/tab-bin.module').then(m => m.TabBinPageModule)
       },
       {
-        path: 'tab-geoloc',
-        loadChildren: () => import('../tab-geoloc/tab-geoloc.module').then(m => m.TabGeolocPageModule)
+        path: 'tab-map',
+        loadChildren: () => import('../tab-map/tab-map.module').then(m => m.MapPageModule)
       },
       {
         path: '',

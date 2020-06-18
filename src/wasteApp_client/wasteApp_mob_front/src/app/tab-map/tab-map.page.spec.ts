@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { MapPage } from './map.page';
+import { MapPage } from './tab-map.page';
 
 describe('MapPage', () => {
   let component: MapPage;

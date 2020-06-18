@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MapPageRoutingModule } from './map-routing.module';
+import { MapPageRoutingModule } from './tab-map-routing.module';
 
-import { MapPage } from './map.page';
+import { MapPage } from './tab-map.page';
 
 @NgModule({
   imports: [
