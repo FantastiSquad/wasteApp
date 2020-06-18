@@ -138,8 +138,7 @@ export class MapPage implements OnInit, OnDestroy {
 
   leafletPickupPointsMarkerUpdate() {
     console.log("MapPage.leafletPickupPointsMarkerUpdate()");
-    console.log("> pickupPoints: ");
-    console.log(this.pickupPoints);
+    console.log("> pickupPoints: ", this.pickupPoints);
 
     let markerNumber: number = this.pickupPoints.length;
     
@@ -177,13 +176,13 @@ export class MapPage implements OnInit, OnDestroy {
 
       this.pickupPoints.forEach(pickup => {
         // console.log("> pickup: "+JSON.stringify(pickup));
-        console.log("> pickup: "); console.log(pickup);
+        console.log("> pickup: ", pickup);
         pickupLat = +pickup.getLocation.getGeoLocation.getLatitude; sumLatitude += pickupLat; //+ convert string to number
         pickupLon = +pickup.getLocation.getGeoLocation.getLongitude; sumLongitude += pickupLon; //+ convert string to number
         locality = pickup.getLocation.getLocality;
         popupHtml = 
         // ' - <a href="http://maps.google.com?q=' + pickupLat + ',' + pickupLon + '" target="_blank">'
-        ' - <a href="geo:' + pickupLon + ',' + pickupLat + '" target="_blank">' //geo:long,lat ma not work for ios ...
+        ' - <a href="geo:' + pickupLat + ',' + pickupLon + '" target="_blank">' //geo:long,lat ma not work for ios ...
         // + '<em>Nav</em>'
         + '<ion-icon name="navigate" size="small"></ion-icon>'
         + '</a>'
@@ -417,7 +416,7 @@ export class MapPage implements OnInit, OnDestroy {
       //console.log(">>> points: "+JSON.stringify(points));
       
       this.pickupPoints.push(...points);
-      console.log(">>> pickupPoints: "); console.log(this.pickupPoints);
+      console.log(">>> pickupPoints: ", this.pickupPoints);
     })
   }
 
@@ -522,7 +521,7 @@ export class MapPage implements OnInit, OnDestroy {
 
   geoTrackPosition = async (position, err?: any) => {
     console.log("##########################################");
-    console.log("MapPage.trackPosition(): "); console.log(position);
+    console.log("MapPage.trackPosition(): ", position);
     console.log("geoTrackerID: "+ this.geoTrackerID);
     if (err) { this.geoTrackError(err); return;}
     if (!this.geoTrackerID) { console.log("tracker should be OFF, cancelling process"); return;}
@@ -554,7 +553,7 @@ export class MapPage implements OnInit, OnDestroy {
 
   async geoTrackError(err: any) {
     console.log("##########################################");
-    console.log("MapPage.trackError()"); console.log(err);
+    console.log("MapPage.trackError()", err);
     // error toasting
     await this.toaster('GeoTraking: Une erreur est survenue!', 'tertiary', 500);
   }
