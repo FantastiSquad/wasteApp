@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiHelperService } from './shared/services/api-helper.service';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage';
+import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { ResearchZoneFormPopoverModule } from './research-zone-form-popover/research-zone-form-popover.module';
 
 @NgModule({
@@ -18,8 +20,10 @@ import { ResearchZoneFormPopoverModule } from './research-zone-form-popover/rese
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    SharedDirectivesModule
     ResearchZoneFormPopoverModule,
   ],
   providers: [

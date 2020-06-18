@@ -32,6 +32,8 @@
     "cordova-plugin-geolocation": "^4.0.2",
     "leaflet": "^1.6.0",
     "leaflet.awesome-markers": "^2.0.5",
+    "@ionic/storage": "^2.2.0",
+    "cordova-sqlite-storage": "^5.0.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.13.0",
     "zone.js": "~0.10.2"
@@ -61,10 +63,5 @@
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
   },
-  "description": "An Ionic project",
-  "cordova": {
-    "plugins": {
-      "cordova-plugin-geolocation": {}
-    }
-  }
+  "description": "An Ionic project"
 }

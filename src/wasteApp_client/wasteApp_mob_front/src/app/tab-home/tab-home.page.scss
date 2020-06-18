@@ -1,0 +1,17 @@
+ion-img {
+    width: 20vw;
+    height: 20vh;
+    margin: auto;
+}
+ion-toolbar {
+    background-color: rgb(10, 59, 102);
+}
+.active-item {
+    border-left: 8px solid #5D67E3;
+}
+ion-icon {
+    margin-right: 5vw;
+}
+ion-title, ion-label {
+    font-weight: bold;
+}

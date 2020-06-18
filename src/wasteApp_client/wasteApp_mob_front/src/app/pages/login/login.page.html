@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-buttons slot="start">
+      <ion-menu-toggle>
+        <ion-menu-button autoHide="false" menu="first"></ion-menu-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+ 
+    <ion-list>
+      <ion-item>
+        <ion-label fixed class="ion-padding-start">Username</ion-label>
+        <ion-input type="text" [(ngModel)]="user.name" class="ion-text-center"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed class="ion-padding-start">Password</ion-label>
+        <ion-input type="text" [(ngModel)]="user.pw" class="ion-text-center"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button color="tertiary" expand="block" full (click)="loginUser()">Login</ion-button>
+
+</ion-content>
