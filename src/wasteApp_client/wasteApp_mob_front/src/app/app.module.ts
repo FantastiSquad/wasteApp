@@ -12,6 +12,8 @@ import { ApiHelperService } from './shared/services/api-helper.service';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +24,10 @@ import { SharedDirectivesModule } from './directives/shared-directives.module';
     IonicStorageModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    FormsModule,
+    ReactiveFormsModule,
+    
   ],
   providers: [
     StatusBar,

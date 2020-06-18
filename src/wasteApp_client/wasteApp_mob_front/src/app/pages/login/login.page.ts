@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {AlertController} from '@ionic/angular';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { DataService } from 'src/app/shared/services/data.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 
 @Component({
@@ -12,17 +13,22 @@ import { DataService } from 'src/app/shared/services/data.service';
 })
 export class LoginPage implements OnInit {
   user = {
-    name: 'user',
-    pw: 'user'
+    email: 'user',
+    password: 'user'
   };
+  isSubmitted = false;
+  loginForm: FormGroup;
  
-  constructor(private authService : AuthService, private router: Router, private alertCtrl: AlertController, private dataService: DataService) { }
+  constructor(private authService : AuthService, private router: Router, private alertCtrl: AlertController, private dataService: DataService, public formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.buildLoginForm();
   }
 
   loginUser(){
-    this.authService.login(this.user.name, this.user.pw)
+    this.isSubmitted = true;
+    console.log(this.loginForm.value);
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
         .then(success => {
           if (success) {
             console.log(`le role newsPage est:${this.authService.currentUser.role}`);
@@ -45,6 +51,17 @@ export class LoginPage implements OnInit {
     });
     alert.present();
    
+  }
+
+  buildLoginForm(){
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.minLength(2)]],
+      password: ['', [Validators.required]],
+    });
+  }
+
+  get errorControl(){
+    return this.loginForm.controls;
   }
 }
 

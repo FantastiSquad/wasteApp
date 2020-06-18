@@ -10,5 +10,43 @@
 </ion-header>
 
 <ion-content>
+  <ion-card>
+    <ion-card-header>
+        <ion-card-title >M'inscrire à Wasty </ion-card-title>
 
+    </ion-card-header>
+    <ion-card-content>
+    <form class="container" [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()" novalidate>
+
+      <ion-item lines="full">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input formControlName="email" type="email" required placeholder="mon email"></ion-input>
+      </ion-item>
+      <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.required">
+        Entrez un email.
+      </span>
+
+      <ion-item lines="full">
+        <ion-label position="floating">Password</ion-label>
+        <ion-input formControlName="password" type="text" required placeholder="mon mot de passe"></ion-input>
+      </ion-item>
+      <span class="error ion-padding" *ngIf="isSubmitted && errorControl.password.errors?.required">
+        Entrez un mot de passe.
+      </span>
+      <ion-item lines="full">
+        <ion-label position="floating" >Password confirmation</ion-label>
+        <ion-input formControlName="passwordConfirmation" type="text" required placeholder="Je vérifie mon mot de passe"></ion-input>
+      </ion-item>
+      <span class="error ion-padding" *ngIf="isSubmitted && errorControl.passwordConfirmation.errors?.required">
+        Vérifiez votre mot de passe.
+      </span>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="danger" expand="block">Submit</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-card-content>
+  </ion-card>
 </ion-content>
