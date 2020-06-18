@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {AlertController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { DataService } from 'src/app/shared/services/data.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
   isSubmitted = false;
   loginForm: FormGroup;
  
-  constructor(private authService : AuthService, private router: Router, private alertCtrl: AlertController, private dataService: DataService, public formBuilder: FormBuilder) { }
+  constructor(private authService : AuthService, private router: Router, private alertCtrl: AlertController, private dataService: DataService, public formBuilder: FormBuilder, private nav: NavController) { }
 
   ngOnInit() {
     this.buildLoginForm();
@@ -35,7 +35,8 @@ export class LoginPage implements OnInit {
             let data = this.authService.currentUser.role;
                       
             this.dataService.setData('role', data );
-            this.router.navigateByUrl('/tabs/tab-home/role');
+            //this.router.navigate(['/', 'tabs', 'tab-home', 'role']);
+            this.nav.navigateRoot('/tabs/tab-home/role');
           } 
         }).catch(err =>{
           this.presentAlert();
