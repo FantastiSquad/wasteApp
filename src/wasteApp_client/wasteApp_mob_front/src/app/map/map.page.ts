@@ -514,10 +514,11 @@ export class MapPage implements OnInit, OnDestroy {
     }
   }
 
-  geoTrackPosition = async (position) => {
+  geoTrackPosition = async (position, err?: any) => {
     console.log("##########################################");
-    console.log("MapPage.trackPosition: "); console.log(position);
+    console.log("MapPage.trackPosition(): "); console.log(position);
     console.log("geoTrackerID: "+ this.geoTrackerID);
+    if (err) { this.geoTrackError(err);}
     if (!this.geoTrackerID) { console.log("tracker should be OFF, cancelling process"); return;}
     if (position == null) {
       // this.geoTrackerOFF();
@@ -545,5 +546,8 @@ export class MapPage implements OnInit, OnDestroy {
     this.leafletRecenterMap(true, this.map.getZoom());
   }
 
-  geoTrackError() {console.log("MapPage.trackError()");}
+  geoTrackError(err: any) {
+    console.log("##########################################");
+    console.log("MapPage.trackError()"); console.log(err);
+  }
 }
