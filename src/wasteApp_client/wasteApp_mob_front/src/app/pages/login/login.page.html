@@ -5,22 +5,41 @@
         <ion-menu-button autoHide="false" menu="first"></ion-menu-button>
       </ion-menu-toggle>
     </ion-buttons>
-    <ion-title>Login</ion-title>
+    <ion-title>Connexion</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
- 
-    <ion-list>
-      <ion-item>
-        <ion-label fixed class="ion-padding-start">Username</ion-label>
-        <ion-input type="text" [(ngModel)]="user.name" class="ion-text-center"></ion-input>
-      </ion-item>
+  <ion-card>
+    <ion-card-header>
+        <ion-card-title >M'identifier</ion-card-title>
+    </ion-card-header>
 
-      <ion-item>
-        <ion-label fixed class="ion-padding-start">Password</ion-label>
-        <ion-input type="text" [(ngModel)]="user.pw" class="ion-text-center"></ion-input>
-      </ion-item>
-    </ion-list>
-    <ion-button color="tertiary" expand="block" full (click)="loginUser()">Login</ion-button>
+    <ion-card-content>
+      <form class="container" [formGroup]="loginForm" (ngSubmit)="loginUser()" novalidate>
+        <ion-list>
+          <ion-item lines="full">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input formControlName="email" type="email" required placeholder="Entrez user"></ion-input>
+          </ion-item>
+          <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.required">
+            Entrez un email.
+          </span>
 
+          <ion-item lines="full">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input formControlName="password" type="text" required placeholder="Entrez user"></ion-input>
+          </ion-item>
+          <span class="error ion-padding" *ngIf="isSubmitted && errorControl.password.errors?.required">
+            Entrez un mot de passe.
+          </span>
+        </ion-list>
+        <ion-row>
+          <ion-col>
+            <ion-button type="submit" color="tertiary" expand="block">Soumettre</ion-button>
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-card-content>
+
+  </ion-card>
 </ion-content>

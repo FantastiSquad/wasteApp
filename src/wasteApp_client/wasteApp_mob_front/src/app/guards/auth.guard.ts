@@ -27,8 +27,8 @@ export class AuthGuard implements CanActivate {
   async showAlert() {
     let alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
-      header: ':( - Accès non autorisé !',
-      message: 'Identifiez-vous pour avoir accès aux fonctionnalités du panier.',
+      header: ':( - Comme c\'est dommage !',
+      message: '=> Identifiez-vous pour avoir accès aux fonctionnalités du panier !',
       buttons: ['Fermer']
     });
     alert.present();
