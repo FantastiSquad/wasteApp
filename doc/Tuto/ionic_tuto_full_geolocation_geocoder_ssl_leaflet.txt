@@ -80,10 +80,10 @@ Cert: ./.ionic/ssl/cert.pem
             "sslKey": ".ssl/key.pem"
           },
 
-# immport certificates in your system
+# import certificates in your system
 # windows : cert.mgr.msc 
 trusted root cerfication auth
-> certiffcate > import 
+> certificate > import 
 
 # debian :
 $ sudo mkdir -p /usr/share/ca-certificates/ionic
