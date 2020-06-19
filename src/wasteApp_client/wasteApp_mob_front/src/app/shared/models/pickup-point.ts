@@ -8,11 +8,12 @@ export class PickupPoint {
     private destination : string;
     private packagingSet: Packaging []; 
 
-    constructor(location: Location, destination : string, packagingSet: Packaging []){
-        
-        this.location = location;
+    constructor(id: number, location: any, destination : string, packagingSet: Packaging []){
+        this.id = id;
+        this.location = new Location(location.geolocation, location.streetNumber, location.streetName, location.postalCode, location.locality);
         this.destination = destination;
-        this.packagingSet = packagingSet;
+        // console.log("packagingSet: "+ packagingSet);
+        // this.packagingSet = packagingSet;
     }
 
     public get getid(): number { return this.id; }

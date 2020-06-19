@@ -40,7 +40,7 @@ export class PickupPointService {
     return promise;
   }
 
-  public getPickupPointByLocality(locality: string): Promise<any>{
+  public getPickupPointsByLocality(locality: string): Promise<any>{
     let endpoint = this.endpoint + `/locality/${locality}`;
     let promise = new Promise((resolve, reject) => {
       this.api.get({ endpoint: endpoint})
@@ -53,7 +53,7 @@ export class PickupPointService {
     return promise;
   }
 
-  public findPickupPointByLocality(keyword: string): Promise<any>{
+  public findPickupPointsByLocality(keyword: string): Promise<any>{
     let endpoint = this.endpoint + `/locality`;
     let promise = new Promise((resolve, reject) => {
       this.api.get({ endpoint: endpoint, queryParams: {keyword: keyword}})
@@ -66,7 +66,22 @@ export class PickupPointService {
     return promise;
   }
 
-  public getPickupPointByGeoLocation(geolocation: GeoLocation): Promise<any>{
+  public findBySquaredGeolocation(latitude: string, longitude: string, side?: number): Promise<any>{
+    let endpoint = this.endpoint + `/squared`;
+    let promise = new Promise((resolve, reject) => {
+      this.api.get({ 
+        endpoint: endpoint,
+        queryParams: { lat: latitude, lon: longitude, side: side ? "" + side : '' }})
+          .then(
+            res => { resolve(res); },
+            msg => {  reject(msg); }
+          ).catch((error) => { console.log("Aucun point de collecte disponible avec la geolocation donnée: " + new GeoLocation(latitude, longitude)); });
+
+    });
+    return promise;
+  }
+
+  public getPickupPointsByGeoLocation(geolocation: GeoLocation): Promise<any>{
     let endpoint = this.endpoint + `/geolocation`;
     let promise = new Promise((resolve, reject) => {
       this.api.get({ 
@@ -80,7 +95,6 @@ export class PickupPointService {
     });
     return promise;
   }
-
 
   public saveOrUpdatecreatePickupPoint(pickupPoint: PickupPoint): Promise<any> {
     let endpoint = this.endpoint;

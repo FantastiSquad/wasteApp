@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ResearchZoneFormPopoverModule } from './pages/research-zone-form-popover/research-zone-form-popover.module';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SharedDirectivesModule,
     FormsModule,
     ReactiveFormsModule,
-    
+    ResearchZoneFormPopoverModule,
   ],
   providers: [
     StatusBar,

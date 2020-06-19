@@ -24,3 +24,10 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+/* Leaflet mapping and marker */
+@import "~leaflet/dist/leaflet.css";
+/* Leaflet.awesome-markers */
+@import "~leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
+/* FontAwesome for Leaflet.awesome-markers */
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
