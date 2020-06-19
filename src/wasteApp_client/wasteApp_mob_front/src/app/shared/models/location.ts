@@ -8,8 +8,8 @@ export class Location {
     private postalCode: string ;
     private locality: string ; // City
 
-    constructor(geolocation: GeoLocation, streetNumber: string, streetName: string, postalCode: string, locality: string){
-        this.geolocation = geolocation;
+    constructor(geolocation: any, streetNumber: string, streetName: string, postalCode: string, locality: string){
+        this.geolocation = new GeoLocation(geolocation.latitude, geolocation.longitude, geolocation.roadDistance, geolocation.roadDuration);
         this.streetNumber = streetNumber;
         this.streetName = streetName;
         this.postalCode = postalCode;

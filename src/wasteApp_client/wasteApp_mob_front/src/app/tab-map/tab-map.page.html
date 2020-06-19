@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-title>
+      <ion-icon *ngIf='geoLocationMode' name="locate" size="large" color="light" (click)="geoLocate()"></ion-icon>
+      <ion-icon *ngIf='!geoLocationMode' name="trail-sign" size="large" color="light" (click)="openResearchZonePopover()"></ion-icon>
+      {{ locality ? locality : 'Map' | titlecase}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-icon *ngIf='geoTrackerID' name="analytics-sharp" size="large" color="light" (click)="geoTrackerToggle()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+<!-- <ion-content> -->
+  <!-- <ion-card  slot="fixed">
+    <ion-card-header>
+      <ion-card-title>Zone de recherche</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="localityConfirm()">
+        <ion-item>
+          <ion-label>Locality</ion-label>
+          <ion-input type="search" [(ngModel)]="locality" name="locality" placeholder="Locality input" clearInput></ion-input>
+        </ion-item>
+      </form>
+    </ion-card-content> -->
+    <!-- <ion-button (click)="getGeoLocation()" expand="block">
+      Get GPS Location
+    </ion-button>
+  </ion-card> -->
+  <div id="mapId" style="width: 100%; height: 100%"></div>
+</ion-content>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="light">
+    <ion-icon name="search-sharp" size="large" color="success"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button color="light">
+      <ion-icon name="trail-sign" size="large" color="success" (click)="openResearchZonePopover()"></ion-icon>
+    </ion-fab-button>
+    <!-- <ion-fab-button color="light">
+      <ion-icon name="trail-sign" size="large" color="success" (click)="openResearchZoneModal()"></ion-icon>
+    </ion-fab-button> -->
+    <ion-fab-button color="light">
+      <ion-icon name="locate" size="large" color="success" (click)="geoLocate()"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="light">
+      <ion-icon name="analytics-sharp" size="large" color="success" (click)="geoTrackerToggle()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+
+<ion-fab edge="true" vertical="bottom" horizontal="center" slot="fixed">
+<!-- <ion-fab vertical="bottom" horizontal="center" slot="fixed"> -->
+  <ion-fab-button color="success">
+    <ion-icon name="scan-circle" size="large"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button color="success">
+      <ion-icon name="scan-circle" size="large"></ion-icon>
+      <!-- <ion-icon name="layers" size="large"></ion-icon> -->
+    </ion-fab-button>
+  </ion-fab-list>
+  <ion-fab-list side="end">
+    <ion-fab-button color="success">
+      <ion-icon name="trash" size="large"></ion-icon>
+      <!-- <ion-icon name="search-circle" size="large"></ion-icon> -->
+    </ion-fab-button>
+    <ion-fab-button color="success">
+      <ion-icon name="map" size="large"></ion-icon>
+      <!-- <ion-icon name="bookmarks"></ion-icon> -->
+    </ion-fab-button>
+  </ion-fab-list>
+  <ion-fab-list side="start">
+    <ion-fab-button color="success">
+      <ion-icon name="basket" size="large"></ion-icon>
+      <!-- <ion-icon name="search-circle" size="large"></ion-icon> -->
+    </ion-fab-button>
+    <ion-fab-button color="success">
+      <ion-icon name="home" size="large"></ion-icon>
+      <!-- <ion-icon name="bookmarks"></ion-icon> -->
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+

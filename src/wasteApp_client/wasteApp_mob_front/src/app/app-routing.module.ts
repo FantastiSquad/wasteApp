@@ -3,9 +3,22 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
 
+  // {
+  //   path: '',
+  //   redirectTo: 'map',
+  //   pathMatch: 'full'
+  // },
+  { path: '', 
+  loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
+  },
   {
-    path:'city',
-    loadChildren: () => import('./pages/tabcity/tabcity.module').then( m => m.TabcityPageModule)
+    path: '',
+    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+  },
+  // following routes are for test purposes :
+  {
+    path: 'map',
+    loadChildren: () => import('./tab-map/tab-map.module').then( m => m.MapPageModule)
   },
   {
     path:'pickup',
@@ -14,9 +27,6 @@ const routes: Routes = [
   {
     path:'city',
     loadChildren: () => import('./pages/tabcity/tabcity.module').then( m => m.TabcityPageModule)
-  },
-  { path: '', 
-  loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
   },
   // {
   //   path: 'register',
@@ -34,16 +44,6 @@ const routes: Routes = [
   //   path: 'login',
   //   loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   // },
-  {
-
-    path: '',
-    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
-  },
-
-  {
-    path: 'map',
-    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
-  }
 
 ];
 
