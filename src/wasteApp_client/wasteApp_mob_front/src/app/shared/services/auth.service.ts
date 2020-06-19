@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StateService } from './state.service';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 export interface User {
   name: string;
@@ -13,7 +14,7 @@ export interface User {
 export class AuthService {
   currentUser: User;
   
-  constructor(private stateService: StateService, private router: Router) { }
+  constructor(private stateService: StateService, private router: Router, private nav: NavController) { }
 
   login(name: string, pw: string) : Promise<boolean> {
     return new Promise((resolve,reject) => {
@@ -53,7 +54,7 @@ export class AuthService {
 
   signOut() {
     this.stateService.setConnectionState(false);
-    this.router.navigateByUrl('/tabs/tab-home/home');
+    this.nav.navigateRoot('/tabs/tab-home/home');
   }
 }
 

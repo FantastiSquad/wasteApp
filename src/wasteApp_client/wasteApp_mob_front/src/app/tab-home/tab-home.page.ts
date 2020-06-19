@@ -17,34 +17,34 @@ export class TabHomePage implements OnInit {
   authenticated = false;
   data: any;
   connectionState: boolean;
-  
+
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private dataService: DataService, private stateService: StateService, private menuCtrl: MenuController) {
     let snapshot = route.snapshot;
-    this.connectionState = stateService.getConnectionState(); 
-        
-    
+    this.connectionState = stateService.getConnectionState();
+
+
   }
 
   ngOnInit() {
-    let connectionState = this.stateService.getConnectionState(); 
-     
-    this.router.events.subscribe(e => {
-      if (e instanceof ActivationStart && e.snapshot.outlet === "tab"){
+    let connectionState = this.stateService.getConnectionState();
+
+    /*this.router.events.subscribe(e => {
+      if (e instanceof ActivationStart && e.snapshot.outlet === "tab") {
         this.outlet.deactivate();
       }
-    }
-      )
-    if (this.route.data['role']){
+    });*/
+
+    if (this.route.data['role']) {
       this.data = this.route.data['role'];
     }
     console.log(`la connection dans init est ${connectionState}`);
     return this.connectionState;
   }
-  
 
-  logout(){
+
+  logout() {
     this.authService.signOut();
-    
+
   }
 
 }

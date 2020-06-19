@@ -15,12 +15,12 @@ const routes: Routes = [
         loadChildren: () => import('../tab-home/tab-home.module').then(m => m.TabHomePageModule)
       },
       {
-      path: 'tab-home/:role',
-      resolve: {
-        role: DataResolverService
+        path: 'tab-home/:role',
+        resolve: {
+          role: DataResolverService
+        },
+        loadChildren: () => import('../tab-home/tab-home.module').then(m => m.TabHomePageModule)
       },
-      loadChildren: () => import('../tab-home/tab-home.module').then(m => m.TabHomePageModule)
-    },
       {
         path: 'tab-basket',
         loadChildren: () => import('../tab-basket/tab-basket.module').then(m => m.TabBasketPageModule),
@@ -52,4 +52,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

@@ -1,54 +1,49 @@
 <ion-split-pane contentId="content">
-  <ion-menu side ="start" contentId="content" menuId="first">
+  <ion-menu side="start" contentId="content" menuId="mainMenu">
     <ion-header>
       <ion-toolbar color="success">
         <ion-title class="ion-text-center">Wasty</ion-title>
-      </ion-toolbar>      
+
+      </ion-toolbar>  
     </ion-header>
     
     <ion-content>
-      <ion-img src="assets/icon/wastIcon.png"></ion-img>  
-      <div *ngIf="connectionState; else elseBlock">        
+      <ion-img src="assets/icon/wastIcon.png"></ion-img>
+      <div>
         <ion-list>
-          <ion-menu-toggle auto-hide="false" menu="first">
+          <ion-menu-toggle auto-hide="false" menu="mainMenu">
             <ion-item routerLink="/tabs/tab-home/home" routerDirection="root" routerLinkActive="active-item">
               <ion-icon name="home"></ion-icon>
               <ion-label>Home</ion-label>
             </ion-item>
 
-            <ion-item routerLink="/tabs/tab-home/account" routerDirection="root" routerLinkActive="active-item">
-              <ion-icon name="person-outline"></ion-icon>
-              <ion-label>Mon compte</ion-label>
-            </ion-item>
-          <ion-button class="ion-margin" color="tertiary" (click)="logout()">Logout</ion-button>
+            <div *ngIf="connectionState; else elseBlock">
+
+              <ion-item routerLink="/tabs/tab-home/account" routerDirection="root" routerLinkActive="active-item">
+                <ion-icon name="person-outline"></ion-icon>
+                <ion-label>Mon compte</ion-label>
+              </ion-item>
+
+              <ion-button class="ion-margin" color="tertiary" (click)="logout()">Logout</ion-button>
+
+            </div>
+            <ng-template #elseBlock>
+              <ion-item routerLink="/tabs/tab-home/login" routerDirection="root" routerLinkActive="active-item">
+                <ion-icon name="log-in-outline"></ion-icon>
+                <ion-label>Se connecter</ion-label>
+              </ion-item>
+
+              <ion-item routerLink="/tabs/tab-home/register" routerDirection="root" routerLinkActive="active-item">
+                <ion-icon name="create-outline"></ion-icon>
+                <ion-label>S'enregistrer</ion-label>
+              </ion-item>
+            </ng-template>
+
           </ion-menu-toggle>
         </ion-list>
+
       </div>
-
-      <ng-template #elseBlock>
-        <ion-list> 
-          <ion-menu-toggle auto-hide="false" menu="first">
-
-            <ion-item routerLink="/tabs/tab-home/home" routerDirection="root" routerLinkActive="active-item">
-              <ion-icon name="home"></ion-icon>
-              <ion-label>Home</ion-label>
-            </ion-item>
-
-            <ion-item routerLink="/tabs/tab-home/login" routerDirection="root" routerLinkActive="active-item">
-              <ion-icon name="log-in-outline"></ion-icon>
-              <ion-label>Se connecter</ion-label>
-            </ion-item> 
-        
-          <ion-item routerLink="/tabs/tab-home/register" routerDirection="root" routerLinkActive="active-item">
-            <ion-icon name="create-outline"></ion-icon>
-            <ion-label>S'enregistrer</ion-label>
-          </ion-item> 
-        </ion-menu-toggle>         
-        </ion-list>
-      </ng-template>
-      
     </ion-content>
   </ion-menu>
-  <ion-router-outlet id="content" main></ion-router-outlet>
+  <ion-router-outlet id="content" [swipeGesture]="false" main></ion-router-outlet>
 </ion-split-pane>
-
