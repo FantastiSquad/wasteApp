@@ -8,11 +8,11 @@ WasteApp Mobile Application with Ionic and Java
 
 # Build
 
-## Cloner le dépôt
+## Clone the repository
 
 git clone https://github.com/FantastiSquad/wasteApp.git
 
-## Build adn run back (depuis skillful_network) :
+## Build and run back (depuis skillful_network) :
 cd src/wasteApp_server
 mvn clean package spring-boot:run -DskipTests -Dspring-boot.run.profiles=dev -f pom.xml 
 
