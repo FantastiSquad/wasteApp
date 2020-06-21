@@ -21,13 +21,13 @@ mvn clean package spring-boot:run -DskipTests -Dspring-boot.run.profiles=dev -f 
 
 ## Front: Build and Run
 
-    1. NPM installation :  
+1. NPM installation :  
 ```
 cd src/wasteApp_client/wasteApp_mob_front  
 npm install
 ```
 
-    2. Following might be required (check PR #24 for more details and instructions) :  
+2. Following might be required (check PR #24 for more details and instructions) :  
 ```
 npm update  
 ionic build  
@@ -35,12 +35,12 @@ ionic capacitor add android
 ionic capacitor update
 ```
 
-    3. Run from web browser and try out https://localhost:8100 :  
+3. Run from web browser and try out https://localhost:8100 :  
 `ionic serve --ssl`
 
-    4. Build and run on an android mobile platform (using android studio IDE) :  
+4. Build and run on an android mobile platform (using android studio IDE) :  
 `ionic cordova run android -l --ssl --external`
 
-    5. Optional: build an apk :  
+5. Optional: build an apk :  
 `ionic cap build android --ssl`
 
