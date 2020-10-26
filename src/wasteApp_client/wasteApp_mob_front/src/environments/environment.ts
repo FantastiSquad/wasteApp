@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  // base_url: 'https://localhost:8443'
-  base_url: 'https://192.168.0.110:8443'
+  base_url: 'https://localhost:8500'
+  // base_url: 'https://192.168.0.110:8443'
 };
 
 /*
