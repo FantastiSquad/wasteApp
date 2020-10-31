@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+    backend:
+        image: maven:3.6.3-jdk-8
+        volumes:
+            - ./src/wasteApp_server:/usr/src/app
+        working_dir: /usr/src/app
+        command: sh -c 'mvn clean package spring-boot:run -DskipTests -f pom.xml -Dspring-boot.run.profiles=prod-docker'
+        ports:
+            - "8500:8500"
+        extra_hosts:
+            - "dockerhost:192.168.0.210"
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+            
